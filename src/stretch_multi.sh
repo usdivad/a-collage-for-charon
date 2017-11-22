@@ -2,7 +2,7 @@
 
 dir_base_original=`pwd`
 dir_input="/Users/usdivad/Documents/music/charon/songs/mastering_tracks Project/mastered_separated_extended"
-dir_output="${dir_base_original}/tracks_stretched"
+dir_output="${dir_base_original}/data/tracks_stretched"
 
 echo "dir_base_original=$dir_base_original"
 echo "dir_input=$dir_input"

@@ -4,5 +4,4 @@
 .DS_Store
 resources/
 lib/
-tracks_stretched/
-output/
+data/
