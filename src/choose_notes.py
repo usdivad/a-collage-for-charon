@@ -7,6 +7,7 @@ import makersmarkov
 # Settings
 # TODO: Have this be dynamic
 current_track_name = "02. Moondrops_8x.mp3"
+num_notes = 12
 
 # Load data from JSON
 data = {}
@@ -29,6 +30,11 @@ for track_name in data:
 
 # Create transition matrix
 current_track_sequences = data[current_track_name]["sequences"]
-sequence = random.choice(current_track_sequences)
-matrix = makersmarkov.transition_matrix(sequence, 1)
+seed_sequence = random.choice(current_track_sequences)
+seed_sequence = [note for note in sequence if note != ""]
+matrix = makersmarkov.transition_matrix(seed_sequence, 1)
 print(matrix)
+
+# Create new sequence of notes
+generated_sequence = makersmarkov.chain(matrix, num_notes)
+print(generated_sequence)
