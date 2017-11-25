@@ -33,8 +33,9 @@ current_track_sequences = data[current_track_name]["sequences"]
 seed_sequence = random.choice(current_track_sequences)
 seed_sequence = [note for note in sequence if note != ""]
 matrix = makersmarkov.transition_matrix(seed_sequence, 1)
-print(matrix)
+print("seed_sequence: {}".format(seed_sequence))
+print("matrix: {}".format(matrix))
 
 # Create new sequence of notes
 generated_sequence = makersmarkov.chain(matrix, num_notes)
-print(generated_sequence)
+print("generated_sequence: {}".format(generated_sequence))
