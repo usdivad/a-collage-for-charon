@@ -80,7 +80,7 @@ def chain(transition_matrix, size, is_sequence_beginning=truth, is_sequence_end=
             if len(cur_deadend) > len(longest_deadend):
                 longest_deadend = cur_deadend
             deadend_counts.append(len(cur_deadend))
-            deadends.append(' '.join(cur_deadend))
+            deadends.append(' '.join(str(cur_deadend)))
             cur_deadend = []
             prev_deadend = False
 
