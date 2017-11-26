@@ -6,3 +6,4 @@
 resources/
 lib/
 data/
+src/flask_session
