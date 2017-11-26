@@ -91,24 +91,69 @@
 
             // ================================
             // David's additions
-            // var sessionId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0,5);
 
             // Generate session ID
             // From https://stackoverflow.com/a/19964557/4438760
             var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var sessionId = Array(12).join().split(',').map(function() { return alphabet.charAt(Math.floor(Math.random() * alphabet.length)); }).join("");
 
-            // Send data to server
+            // Stop recording if idle for a given amount of time
+            var isRecording = false;
+            var mostRecentTapTimestamp = 0;
+            var tapIdleThreshold = 2500;
+            window.setInterval(function(e) {
+                if (isRecording) {
+                    var timestamp = Date.now();
+                    if (timestamp - mostRecentTapTimestamp >= tapIdleThreshold) {
+                        isRecording = false;
+                        var data = {
+                            "id": sessionId,
+                            "timestamp": timestamp,
+                            "message": "stop"
+                        };
+                        socket.emit("my_broadcast_event", {
+                            "data": JSON.stringify(data)
+                        });
+                        console.log(data);
+                    }
+                }
+            }, 100);
+
+            // Send tap data to server
+            // TODO: Incorporate tap length using both touchstart and touchend?
             $("#tappy").bind("touchstart mousedown", function(event) {
+                // Construct tap data with timestamp
                 var timestamp = Date.now();
                 var tapData = {
                     "id": sessionId,
-                    "timestamp": timestamp
+                    "timestamp": timestamp,
+                    "message": "tap"
                 }
+
+                // Send start message if necessary
+                if (!isRecording) {
+                    var startData = {
+                        "id": sessionId,
+                        "timestamp": timestamp,
+                        "message": "start"
+                    };
+
+                    socket.emit("my_broadcast_event", {
+                        "data": JSON.stringify(startData)
+                    });
+                    console.log(startData);
+                }
+
+                // Send tap data
                 socket.emit("my_broadcast_event", {
                     "data": JSON.stringify(tapData)
                 });
                 console.log(tapData);
+
+                // Update
+                isRecording = true;
+                mostRecentTapTimestamp = timestamp;
+
                 return false;
             });
         });
