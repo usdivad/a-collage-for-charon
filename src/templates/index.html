@@ -88,6 +88,18 @@
                 socket.emit('disconnect_request');
                 return false;
             });
+
+            // ================================
+            // David's additions
+            
+            $("#clicky").bind("touchstart mousedown", function(event) {
+                var timestamp = Date.now();
+                socket.emit("my_broadcast_event", {
+                    "data": timestamp
+                });
+                console.log(timestamp);
+                return false;
+            });
         });
     </script>
 </head>
