@@ -1,0 +1,3 @@
+[submodule "lib/paulstretch_python"]
+	path = lib/paulstretch_python
+	url = https://github.com/paulnasca/paulstretch_python.git
