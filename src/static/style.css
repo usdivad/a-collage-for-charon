@@ -2,7 +2,7 @@ body {
     font-family: Helvetica, sans-serif;
 }
 
-#clicky {
+#tappy {
     background: #333333;
     width: 100%;
     height: 50%;
@@ -10,6 +10,6 @@ body {
     min-height: 200px;
 }
 
-#clicky:active {
+#tappy:active {
     background: #888888;
 }

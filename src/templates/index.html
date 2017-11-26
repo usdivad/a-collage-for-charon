@@ -99,16 +99,16 @@
             var sessionId = Array(12).join().split(',').map(function() { return alphabet.charAt(Math.floor(Math.random() * alphabet.length)); }).join("");
 
             // Send data to server
-            $("#clicky").bind("touchstart mousedown", function(event) {
+            $("#tappy").bind("touchstart mousedown", function(event) {
                 var timestamp = Date.now();
-                var clickData = {
+                var tapData = {
                     "id": sessionId,
                     "timestamp": timestamp
                 }
                 socket.emit("my_broadcast_event", {
-                    "data": JSON.stringify(clickData)
+                    "data": JSON.stringify(tapData)
                 });
-                console.log(clickData);
+                console.log(tapData);
                 return false;
             });
         });
@@ -117,7 +117,7 @@
 <body>
     <h1>a collage for charon</h1>
     <p>
-        <div id="clicky"></div>
+        <div id="tappy"></div>
     </p>
 
     <p>Async mode is: <b>{{ async_mode }}</b></p>
