@@ -31,6 +31,9 @@ def background_thread():
 def index():
     return render_template('index.html', async_mode=socketio.async_mode)
 
+@app.route("/listener")
+def listen():
+    return render_template("listener.html", async_mode=socketio.async_mode)
 
 @socketio.on('my_event', namespace='/test')
 def test_message(message):
