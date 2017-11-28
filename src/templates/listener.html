@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>a collage for charon</title>
+    <title>listening to a collage for charon</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
@@ -36,8 +36,43 @@
                 // Send MIDI
                 // TODO: Construct list and Markov chain and all that good stuff
                 if (midiEnabled) {
+                    // Message data
+                    console.log(msg.data);
+                    var msgData = {};
+                    try {
+                        msgData = JSON.parse(msg.data);
+                    }
+                    catch (e) {
+                        console.log("ERROR when parsing data for message '" + msg.data + "': " + e);
+                        return;
+                    }
+
+                    // Make sure it's a tap
+                    if (msgData["message"] != "tap") {
+                        return;
+                    }
+
+                    // Note
+                    // TODO:
+                    // - Current song selection
+                    // - Markov
                     var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
-                    midiOutput.playNote(midiNote);
+
+                    // Channel
+                    // TODO: Increment channel num and use modulo
+                    var midiChannelNum = 0;
+                    var sessionId = msgData["id"];
+                    if (sessionIdToMidiChannelNum.hasOwnProperty(sessionId)) {
+                        midiChannelNum = sessionIdToMidiChannelNum[sessionId];
+                    }
+                    else {
+                        midiChannelNum = Math.floor(Math.random()*midiNumChannels) + 1;
+                        sessionIdToMidiChannelNum[sessionId] = midiChannelNum;
+                    }
+
+                    // Send the MIDI output!
+                    midiOutput.playNote(midiNote, midiChannelNum, {"duration": "100"});
+                    console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                     // midiOutput.playNote("C4");
                 }
 
@@ -105,6 +140,8 @@
             var midiOutputName = "IAC Driver Bus 1";
             var midiOutput;
             var midiNotes = ["E4", "G4", "A4", "B4", "D5", "E5"];
+            var midiNumChannels = 3;
+            var sessionIdToMidiChannelNum = {};
 
             WebMidi.enable(function(err) {
                 if (err) {
@@ -126,7 +163,7 @@
     </script>
 </head>
 <body>
-    <h1>a collage for charon</h1>
+    <h1>listening to a collage for charon</h1>
     <p>
         <div id="tappy"></div>
     </p>
