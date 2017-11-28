@@ -5,6 +5,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='foswig.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='webmidi.min.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
             // Use a "/test" namespace.
@@ -31,7 +33,13 @@
             // to the client. The data is then displayed in the "Received"
             // section of the page.
             socket.on('my_response', function(msg) {
-                // TODO: Send MIDI
+                // Send MIDI
+                // TODO: Construct list and Markov chain and all that good stuff
+                if (midiEnabled) {
+                    var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
+                    midiOutput.playNote(midiNote);
+                    // midiOutput.playNote("C4");
+                }
 
                 $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
             });
@@ -91,7 +99,29 @@
                 return false;
             });
 
-            
+            // ================================
+            // David's additions
+            var midiEnabled = false;
+            var midiOutputName = "IAC Driver Bus 1";
+            var midiOutput;
+            var midiNotes = ["E4", "G4", "A4", "B4", "D5", "E5"];
+
+            WebMidi.enable(function(err) {
+                if (err) {
+                    console.log("ERROR: " + err);
+                    return;
+                }
+                else {
+                    midiEnabled = true;
+                    console.log("WebMidi enabled");
+
+                    // console.log(WebMidi.inputs);
+                    // console.log(WebMidi.outputs);
+
+                    midiOutput = WebMidi.getOutputByName(midiOutputName);
+                }
+            });
+
         });
     </script>
 </head>
