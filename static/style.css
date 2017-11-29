@@ -13,3 +13,7 @@ body {
 #tappy:active {
     background: #888888;
 }
+
+#debugArea {
+    display: none;
+}
