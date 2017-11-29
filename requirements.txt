@@ -1,10 +1,24 @@
+appdirs==1.4.3
+beautifulsoup4==4.5.3
+click==6.7
 Flask==0.12
+Flask-BasicAuth==0.2.0
 gunicorn==19.7.0
 itsdangerous==0.24
 Jinja2==2.9.5
 MarkupSafe==1.0
+musicbrainzngs==0.6
+olefile==0.44
+packaging==16.8
+Pillow==4.0.0
+pyparsing==2.2.0
+python-wordpress-xmlrpc==2.3
+requests==2.13.0
 six==1.10.0
 Werkzeug==0.12.1
+wikipedia==1.4.0
+pymysql
+pysftp
 
 Flask-Login==0.4.0
 Flask-Session==0.3.1
