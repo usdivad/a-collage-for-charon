@@ -32,6 +32,8 @@
             // The callback function is invoked whenever the server emits data
             // to the client. The data is then displayed in the "Received"
             // section of the page.
+            var mostRecentTaps = [];
+            var numMostRecentTaps = 25;
             socket.on('my_response', function(msg) {
                 // Send MIDI
                 // TODO: Construct list and Markov chain and all that good stuff
@@ -76,7 +78,18 @@
                     // midiOutput.playNote("C4");
                 }
 
-                $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
+                // $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
+                // $('#log').html('Received #' + msg.count + ': ' + msg.data);
+
+                var logMsg = "[" + new Date().toJSON() + "]: #" + msg.count + ": " + msg.data;
+                if (mostRecentTaps.length >= numMostRecentTaps) {
+                    // mostRecentTaps[msg.count % numMostRecentTaps] = logMsg;
+                    mostRecentTaps.pop();
+                }
+                // else {
+                    mostRecentTaps.unshift(logMsg);
+                // }
+                $("#log").html(mostRecentTaps.join("<br>"));
             });
 
             // Interval function that tests message latency by sending a "ping"
@@ -171,13 +184,24 @@
     <p>Async mode is: <b>{{ async_mode }}</b></p>
     <p>Average ping/pong latency: <b><span id="ping-pong"></span>ms</b></p>
     <h2>Send:</h2>
+    <h4>Choose Song</h3>
     <form id="broadcast" method="POST" action='#'>
         <!-- <input type="text" name="emit_data" id="emit_data" placeholder="Message"> -->
         <select name="broadcast_data">
-            <option value="02. Moondrops_8x.mp3">02. Moondrops_8x.mp3</option>
+            <option value="02. Moondrops_8x.mp3">moondrops</option>
+            <option value="04. Orange Grey Skies_8x.mp3">orange grey skies</option>
+            <option value="06. Poster Child_8x.mp3">poster child</option>
+            <option value="08. Interlude_8x.mp3">interlude</option>
+            <option value="10. Chant of the Craftspeople_8x.mp3">chant of the craftspeople</option>
+            <option value="12. A New Home_8x.mp3">a new home</option>
+            <option value="13. Orange Grey Skies (Reprise)_8x.mp3">orange grey skies (reprise)</option>
+            <!-- <option value="14. End Credits_8x.mp3"></option> -->
+            <!-- <option value=".mp3"></option> -->
         </select>
         <input type="submit" value="Choose Song">
     </form>
+    <br/>
+    <h4>Test methods</h3>
     <form id="emit" method="POST" action='#'>
         <input type="text" name="emit_data" id="emit_data" placeholder="Message">
         <input type="submit" value="Echo">
