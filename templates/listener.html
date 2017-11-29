@@ -177,31 +177,35 @@
 </head>
 <body>
     <h1>listening to a collage for charon</h1>
-    <p>
+<!--     <p>
         <div id="tappy"></div>
+    </p> -->
+    <br/>
+    <p>
+        <h2>Choose Song</h2>
+        <form id="broadcast" method="POST" action='#'>
+            <!-- <input type="text" name="emit_data" id="emit_data" placeholder="Message"> -->
+            <select name="broadcast_data">
+                <option value="02. Moondrops_8x.mp3">moondrops</option>
+                <option value="04. Orange Grey Skies_8x.mp3">orange grey skies</option>
+                <option value="06. Poster Child_8x.mp3">poster child</option>
+                <option value="08. Interlude_8x.mp3">interlude</option>
+                <option value="10. Chant of the Craftspeople_8x.mp3">chant of the craftspeople</option>
+                <option value="12. A New Home_8x.mp3">a new home</option>
+                <option value="13. Orange Grey Skies (Reprise)_8x.mp3">orange grey skies (reprise)</option>
+                <!-- <option value="14. End Credits_8x.mp3"></option> -->
+                <!-- <option value=".mp3"></option> -->
+            </select>
+            <input type="submit" value="Choose Song">
+        </form>
     </p>
+    <br/>
+    <hr/>
+    <br/>
 
     <p>Async mode is: <b>{{ async_mode }}</b></p>
     <p>Average ping/pong latency: <b><span id="ping-pong"></span>ms</b></p>
     <h2>Send:</h2>
-    <h4>Choose Song</h3>
-    <form id="broadcast" method="POST" action='#'>
-        <!-- <input type="text" name="emit_data" id="emit_data" placeholder="Message"> -->
-        <select name="broadcast_data">
-            <option value="02. Moondrops_8x.mp3">moondrops</option>
-            <option value="04. Orange Grey Skies_8x.mp3">orange grey skies</option>
-            <option value="06. Poster Child_8x.mp3">poster child</option>
-            <option value="08. Interlude_8x.mp3">interlude</option>
-            <option value="10. Chant of the Craftspeople_8x.mp3">chant of the craftspeople</option>
-            <option value="12. A New Home_8x.mp3">a new home</option>
-            <option value="13. Orange Grey Skies (Reprise)_8x.mp3">orange grey skies (reprise)</option>
-            <!-- <option value="14. End Credits_8x.mp3"></option> -->
-            <!-- <option value=".mp3"></option> -->
-        </select>
-        <input type="submit" value="Choose Song">
-    </form>
-    <br/>
-    <h4>Test methods</h3>
     <form id="emit" method="POST" action='#'>
         <input type="text" name="emit_data" id="emit_data" placeholder="Message">
         <input type="submit" value="Echo">
