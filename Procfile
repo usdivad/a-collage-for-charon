@@ -1,1 +1,1 @@
-web: gunicorn -k gevent -w 1 app:src/app
+web: gunicorn -k gevent -w 1 module:app
