@@ -10,3 +10,5 @@ python-socketio
 six==1.9.0
 Werkzeug==0.12.2
 gunicorn==19.7.0
+gevent
+gevent-websockets
