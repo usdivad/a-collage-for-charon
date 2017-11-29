@@ -5,11 +5,9 @@ Flask_SocketIO==2.9.2
 itsdangerous==0.24
 Jinja2==2.7.3
 MarkupSafe==0.23
-python-engineio
+python-engineio==2.0.1
 python-socketio==1.8.3
 six==1.9.0
 Werkzeug==0.12.2
 gunicorn==19.7.0
 gevent==1.2.1
-gevent-websocket
-gevent-socketio
