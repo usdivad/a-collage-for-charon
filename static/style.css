@@ -80,3 +80,7 @@ a {
 #debugArea {
     display: none;
 }
+
+#credits {
+    font-size: 90%;
+}
