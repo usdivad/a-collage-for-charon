@@ -55,6 +55,8 @@
                         // - Markov
                         // var midiNote = midiNotes[Math.floor(msgData["degree"] * midiNotes.length)]
                         var degree = msgData["degree"];
+                        var midiNotes = midiNotesBySong[getCurrSong()];
+                        console.log(getCurrSong() + ": " + midiNotes);
                         var midiNote = midiNotes[Math.max(0, Math.min(degree, midiNotes.length))];
                         // var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
 
@@ -151,15 +153,31 @@
                 return false;
             });
 
+            // Update currSong with selected song
+            $("#songSelect").change(function() {
+                currSong = $("#songSelect option:selected").val();
+                console.log(currSong);
+            });
+
             // ================================
             // David's additions
             var midiEnabled = false;
             var midiOutputName = "IAC Driver Bus 1";
             var midiOutput;
-            var midiNotes = ["E4", "G4", "A4", "B4", "D5", "E5"];
+            // var midiNotes = ["E4", "G4", "A4", "B4", "D5", "E5"];
+            var midiNotesBySong = {
+                "02. Moondrops_8x.mp3": ["E4", "G4", "A4", "B4", "D5", "E5"],
+                "04. Orange Grey Skies_8x.mp3": ["G4", "Bb4", "C5", "D5", "F5", "G5"],
+                "06. Poster Child_8x.mp3": ["C4", "Eb4", "F4", "G4", "Bb4", "C5"],
+                "08. Interlude_8x.mp3": ["G4", "Bb4", "C5", "D5", "F5", "G5"],
+                "10. Chant of the Craftspeople_8x.mp3": ["D4", "F4", "G4", "A4", "C5", "D5"],
+                "12. A New Home_8x.mp3": ["A3", "D4", "G4", "A4", "C5", "D5"],
+                "13. Orange Grey Skies (Reprise)_8x.mp3": ["A4", "B4", "C#5", "E5", "F#5", "A5"],
+            };
             var midiNumChannels = 10;
             var sessionIdToMidiChannelNum = {};
             var numSessions = 0;
+            var currSong = "02. Moondrops_8x.mp3";
             
             var mostRecentTaps = [];
             var numMostRecentTaps = 25;
@@ -180,6 +198,10 @@
                 }
             });
 
+            function getCurrSong() {
+                return currSong;
+            }
+
         });
     </script>
 </head>
@@ -191,9 +213,9 @@
     <br/>
     <p>
         <h2>Choose Song</h2>
-        <form id="broadcast" method="POST" action='#'>
+        <!-- <form id="chooseSong" method="POST" action='#'> -->
             <!-- <input type="text" name="emit_data" id="emit_data" placeholder="Message"> -->
-            <select name="broadcast_data">
+            <select id="songSelect" name="broadcast_data">
                 <option value="02. Moondrops_8x.mp3">moondrops</option>
                 <option value="04. Orange Grey Skies_8x.mp3">orange grey skies</option>
                 <option value="06. Poster Child_8x.mp3">poster child</option>
@@ -204,8 +226,8 @@
                 <!-- <option value="14. End Credits_8x.mp3"></option> -->
                 <!-- <option value=".mp3"></option> -->
             </select>
-            <input type="submit" value="Choose Song">
-        </form>
+            <!-- <input type="submit" value="Choose Song"> -->
+        <!-- </form> -->
     </p>
     <br/>
     <hr/>
