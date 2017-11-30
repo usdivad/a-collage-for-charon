@@ -120,14 +120,44 @@
             }, 100);
 
             // Send tap data to server
-            // TODO: Incorporate tap length using both touchstart and touchend?
-            $("#tappy").bind("touchstart mousedown", function(event) {
+            // TODO:
+            // - Figure out a better way to pass scale degree into handleTap()...
+            // - Incorporate tap length using both touchstart and touchend?
+
+            $("#tappy0").bind("touchstart mousedown", function(event) {
+                handleTap(0);
+                return false;
+            });
+            $("#tappy1").bind("touchstart mousedown", function(event) {
+                handleTap(1);
+                return false;
+            });
+            $("#tappy2").bind("touchstart mousedown", function(event) {
+                handleTap(2);
+                return false;
+            });
+            $("#tappy3").bind("touchstart mousedown", function(event) {
+                handleTap(3);
+                return false;
+            });
+            $("#tappy4").bind("touchstart mousedown", function(event) {
+                handleTap(4);
+                return false;
+            });
+            $("#tappy5").bind("touchstart mousedown", function(event) {
+                handleTap(5);
+                return false;
+            });
+
+
+            function handleTap(degree) {
                 // Construct tap data with timestamp
                 var timestamp = Date.now();
                 var tapData = {
                     "id": sessionId,
                     "timestamp": timestamp,
-                    "message": "tap"
+                    "message": "tap",
+                    "degree": degree // Scale degree
                 }
 
                 // Send start message if necessary
@@ -153,17 +183,32 @@
                 // Update
                 isRecording = true;
                 mostRecentTapTimestamp = timestamp;
-
-                return false;
-            });
+            } 
         });
     </script>
 </head>
 <body>
     <h1>a collage for charon</h1>
+    <p>tap the blocks below</p>
     <p>
-        <div id="tappy"></div>
+        <div class="tappy" id="tappy5"></div>
+        <div class="tappy" id="tappy4"></div>
+        <div class="tappy" id="tappy3"></div>
+        <div class="tappy" id="tappy2"></div>
+        <div class="tappy" id="tappy1"></div>
+        <div class="tappy" id="tappy0"></div>
     </p>
+    <br/><br/>
+    <p>
+        by <a href="http://usdivad.com/">david su</a>, 
+        <!-- <br/> -->
+        for A R E A gallery's <a href="https://collage.splashthat.com/">collage</a>
+        <!-- <br/> -->
+        + <a href="http://yiandthethousandmoons.com/">yi and the thousand moons</a> OST release, 
+        <!-- <br/> -->
+        12/1/2017
+    </p>
+    <br/>
 
     <div id="debugArea">
         <p>Async mode is: <b>{{ async_mode }}</b></p>
