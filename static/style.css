@@ -77,7 +77,7 @@ a {
     opacity: 1.0;
 }
 
-#debugArea {
+.debugArea {
     display: none;
 }
 
