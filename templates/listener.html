@@ -53,7 +53,10 @@
                         // TODO:
                         // - Current song selection
                         // - Markov
-                        var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
+                        // var midiNote = midiNotes[Math.floor(msgData["degree"] * midiNotes.length)]
+                        var degree = msgData["degree"];
+                        var midiNote = midiNotes[Math.max(0, Math.min(degree, midiNotes.length))];
+                        // var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
 
                         // Channel
                         // TODO: Increment channel num and use modulo
