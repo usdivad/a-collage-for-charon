@@ -32,8 +32,6 @@
             // The callback function is invoked whenever the server emits data
             // to the client. The data is then displayed in the "Received"
             // section of the page.
-            var mostRecentTaps = [];
-            var numMostRecentTaps = 25;
             socket.on('my_response', function(msg) {
                 // Send MIDI
                 // TODO: Construct list and Markov chain and all that good stuff
@@ -49,33 +47,36 @@
                         return;
                     }
 
-                    // Make sure it's a tap
-                    if (msgData["message"] != "tap") {
-                        return;
-                    }
+                    // Only send MIDI if it's a tap
+                    if (msgData["message"] == "tap") {
+                        // Note
+                        // TODO:
+                        // - Current song selection
+                        // - Markov
+                        var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
 
-                    // Note
-                    // TODO:
-                    // - Current song selection
-                    // - Markov
-                    var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
+                        // Channel
+                        // TODO: Increment channel num and use modulo
+                        var midiChannelNum = 0;
+                        var sessionId = msgData["id"];
+                        if (sessionIdToMidiChannelNum.hasOwnProperty(sessionId)) {
+                            midiChannelNum = sessionIdToMidiChannelNum[sessionId];
+                        }
+                        else {
+                            midiChannelNum = (numSessions % midiNumChannels) + 1;
+                            console.log("new session: " + numSessions);
 
-                    // Channel
-                    // TODO: Increment channel num and use modulo
-                    var midiChannelNum = 0;
-                    var sessionId = msgData["id"];
-                    if (sessionIdToMidiChannelNum.hasOwnProperty(sessionId)) {
-                        midiChannelNum = sessionIdToMidiChannelNum[sessionId];
-                    }
-                    else {
-                        midiChannelNum = Math.floor(Math.random()*midiNumChannels) + 1;
-                        sessionIdToMidiChannelNum[sessionId] = midiChannelNum;
-                    }
+                            numSessions++;
 
-                    // Send the MIDI output!
-                    midiOutput.playNote(midiNote, midiChannelNum, {"duration": "100"});
-                    console.log(sessionId + "," + midiNote + "," + midiChannelNum);
-                    // midiOutput.playNote("C4");
+                            // midiChannelNum = Math.floor(Math.random()*midiNumChannels) + 1;
+                            sessionIdToMidiChannelNum[sessionId] = midiChannelNum;
+                        }
+
+                        // Send the MIDI output!
+                        midiOutput.playNote(midiNote, midiChannelNum, {"duration": "100"});
+                        console.log(sessionId + "," + midiNote + "," + midiChannelNum);
+                        // midiOutput.playNote("C4");
+                    }
                 }
 
                 // $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
@@ -153,8 +154,12 @@
             var midiOutputName = "IAC Driver Bus 1";
             var midiOutput;
             var midiNotes = ["E4", "G4", "A4", "B4", "D5", "E5"];
-            var midiNumChannels = 3;
+            var midiNumChannels = 10;
             var sessionIdToMidiChannelNum = {};
+            var numSessions = 0;
+            
+            var mostRecentTaps = [];
+            var numMostRecentTaps = 25;
 
             WebMidi.enable(function(err) {
                 if (err) {
