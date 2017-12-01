@@ -1,6 +1,9 @@
 *.wav
 *.mp3
 *.pyc
+*.swo
+*.swp
+*node_modules
 
 .DS_Store
 resources/
