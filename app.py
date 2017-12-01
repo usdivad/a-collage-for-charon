@@ -42,6 +42,10 @@ def test_message(message):
     emit('my_response',
          {'data': message['data'], 'count': session['receive_count']})
 
+@socketio.on('biosignals', namespace='/test')
+def get_biosignals(message):
+  emit('biosignal_data', message, broadcast=True)
+
 
 @socketio.on('my_broadcast_event', namespace='/test')
 def test_broadcast_message(message):
@@ -106,7 +110,6 @@ def test_connect():
         if thread is None:
             thread = socketio.start_background_task(target=background_thread)
     emit('my_response', {'data': 'Connected', 'count': 0})
-
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
