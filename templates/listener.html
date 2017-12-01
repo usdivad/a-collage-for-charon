@@ -26,9 +26,75 @@
             // server is established.
             socket.on('connect', function() {
                 socket.emit('my_event', {data: 'I\'m connected!'});
+                });
+            var flex = 0,
+                hr = 0,
+                oldHr = 0, 
+                thresh = 50,
+                bpm = 0,
+                eda = 0;
+            var prev = new Date().getTime()/1000;
+            var now = new Date().getTime()/1000;
+            var lastBeat = new Date().getTime()/1000;
+            var delay = 20;
+            var buffer = [];
+            var bpmInit = false;
+
+            socket.on('biosignal_data', function (data) {
+                oldHr = hr;
+                flex = data.flex; 
+                hr = data.hr;
+                eda = data.eda; 
+                buffer.push(hr);
+                if (bpmInit) {
+                  buffer.shift();
+                }
+                $('#flex').text(flex);
+                $('#eda').text(eda);
+
+                if(hr - oldHr > thresh && now - lastBeat > .4){
+                //beatOn
+                  document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.8)';
+                lastBeat = new Date().getTime()/1000;
+                } else {
+                  document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.1)';
+                }
+                now = new Date().getTime()/1000;
+                if (!bpmInit) {
+                  if(now - prev >= 60) { 
+                    processBPM(buffer, thresh);
+                    prev = now;
+                    bpmInit = true;
+                  }
+                } else {
+                  if(now - prev >= 2) {
+                    processBPM(buffer, thresh);
+                    prev = now;
+                  }
+                }
             });
 
-            // Event handler for server sent data.
+            function setBPM(_bpm) {
+              console.log("setBPM");
+              $('#bpm').text(_bpm);
+            }
+
+            function processBPM(buffer, thresh) {
+              _bpm = 0;
+              _prev = 0;
+              lastBeat = -3;
+              var i;
+              for (i = 1; i < buffer.length; i++) {
+                _now = buffer[i];
+                _prev = buffer[i-1];
+                if (_now - _prev > thresh && i - lastBeat > 4) {
+                  _bpm++;
+                  lastBeat = i;
+                }
+              }
+              setBPM(_bpm);
+            }
+// Event handler for server sent data.
             // The callback function is invoked whenever the server emits data
             // to the client. The data is then displayed in the "Received"
             // section of the page.
@@ -78,6 +144,9 @@
                         }
 
                         // Send the MIDI output!
+                        if (!midiOutput) {
+                          return;
+                        }
                         midiOutput.playNote(midiNote, midiChannelNum, {"duration": "100"});
                         console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                         // midiOutput.playNote("C4");
@@ -206,6 +275,22 @@
     </script>
 </head>
 <body>
+    <div id="channels">
+      <div id="channel-flex" class="channel">
+        <div class="channel-name">Flex</div>
+        <div id="flex" class="channel-value">0</div>
+      </div>
+      <div id="channel-bpm" class="channel">
+        <div class="channel-name">BPM</div>
+        <div id="bpm" class="channel-value">0</div>
+      </div>
+      <div id="channel-eda" class="channel">
+        <div class="channel-name">EDA</div>
+        <div id="eda" class="channel-value">0</div>
+      </div>
+    </div>
+    <div id="flex"></div>
+    <div id="eda"></div>
     <h1>listening to a collage for charon</h1>
 <!--     <p>
         <div id="tappy"></div>

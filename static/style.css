@@ -71,16 +71,54 @@ a {
 }
 
 #tappy5 {
-    opacity: 0.9;
+opacity: 0.9;
 }
 #tappy5:active {
-    opacity: 1.0;
+opacity: 1.0;
 }
 
 .debugArea {
-    display: none;
+display: none;
 }
 
 #credits {
-    font-size: 90%;
+  font-size: 90%;
+}
+
+#channels {
+width: 200px;
+height: 100%;
+position: absolute;
+right: 0;
+top: 0;
+background: rgba(0, 0, 0, .1);
+}
+
+.channel {
+width: 200px;
+height: 200px;
+        text-align: center;
+background: rgba(0, 0, 0, .1);
+}
+
+.channel-name {
+  padding-top: 30px;
+  font-weight: 700;
+}
+
+.channel-value {
+  padding-top: 40px;
+  font-weight: 300;
+}
+
+#channel-flex {
+background: rgba(11, 102, 35, 0.1);
+}
+
+#channel-bpm {
+background: rgba(255, 0, 0, 0.1);
+}
+
+#channel-eda {
+background: rgba(0, 0, 255, 0.1);
 }
