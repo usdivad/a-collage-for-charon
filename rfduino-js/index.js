@@ -4,7 +4,7 @@
 // https://github.com/RFduino/RFduino/blob/master/libraries/RFduinoBLE/examples/Temperature/Temperature.ino
 //
 // (c) 2014 Don Coleman
-var noble = require('../noble'),
+var noble = require('noble'),
     rfduino = require('./rfduino'),
     _ = require('underscore');
 

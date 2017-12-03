@@ -52,8 +52,19 @@
                 $('#flex').text(flex);
                 $('#eda').text(eda);
 
+
+
+                midiOutput.sendControlChange(2, Math.max(0, Math.min(127, ((flex-200) / 500) * 127 )));
+                midiOutput.sendControlChange(3, Math.max(0, Math.min(127, (eda/300) * 127)));
+                if (eda > 500) {
+                    midiOutput.playNote("B4", 11, {"duration": 100});
+                }
+
                 if(hr - oldHr > thresh && now - lastBeat > .4){
                 //beatOn
+                midiOutput.playNote("C2", 11, {"duration": 100});
+
+
                   document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.8)';
                 lastBeat = new Date().getTime()/1000;
                 } else {
@@ -77,6 +88,8 @@
             function setBPM(_bpm) {
               console.log("setBPM");
               $('#bpm').text(_bpm);
+
+              midiOutput.sendControlChange(1, _bpm);
             }
 
             function processBPM(buffer, thresh) {
