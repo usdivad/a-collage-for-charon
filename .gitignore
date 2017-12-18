@@ -5,6 +5,8 @@
 *.swp
 *node_modules
 
+notes.txt
+
 .DS_Store
 resources/
 lib/
