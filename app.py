@@ -36,6 +36,14 @@ def index():
 def listen():
     return render_template("listener.html", async_mode=socketio.async_mode)
 
+@app.route('/praeludium')
+def praeludium_player():
+    return render_template('praeludium_player.html', async_mode=socketio.async_mode)
+
+@app.route('/praeludium_conductor')
+def praeludium_conductor():
+    return render_template('praeludium_conductor.html', async_mode=socketio.async_mode)
+
 @socketio.on('my_event', namespace='/test')
 def test_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
