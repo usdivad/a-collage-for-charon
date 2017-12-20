@@ -86,13 +86,30 @@ $(document).ready(function() {
     // ================================
     // David's additions
 
+    // Construct keyboard layout
+    var availableChars = "abcdefghijklmnopqrstuvwxyz1234567890.,?!".split("");
+    shuffle(availableChars);
+    var numCharsPerRow = 4;
+    var keyboardLayout = [];
+    for (var i=0; i<availableChars.length; i++) {
+        var rowNum = Math.floor(i / numCharsPerRow);
+        while (keyboardLayout.length <= rowNum) {
+            keyboardLayout.push([]);
+        }
+        keyboardLayout[rowNum].push(availableChars[i]);
+    }
+    keyboardLayout.push([["space", "space"]]);
+
     // Bind keyboard
-    // $("#default").keyboard();
-    $("#inline").keyboard();
-    // $(".button").bind("touchstart mousedown", function(event) {
-    //     console.log(event);
-    //     return false;
-    // });
+    $("#inline").keyboard({
+        layout: keyboardLayout
+    });
+
+    // Adjust style
+    $(".btn").css("width", "4.4em");
+    $(".btn").css("height", "4em");
+    $(".jqbtk-space").css("width", "13.2em");
+    $(".keyboard-container").css("height", "1200px");
 
     // Generate session ID
     // From https://stackoverflow.com/a/19964557/4438760
@@ -194,5 +211,16 @@ $(document).ready(function() {
         // Update
         isRecording = true;
         mostRecentTapTimestamp = timestamp;
-    } 
+    }
+
+    // Fisher-Yates shuffle (thanks https://stackoverflow.com/a/6274381/4438760!)
+    function shuffle(a) {
+        var j, x, i;
+        for (i = a.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            x = a[i];
+            a[i] = a[j];
+            a[j] = x;
+    }
+} 
 });
