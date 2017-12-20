@@ -86,6 +86,10 @@ $(document).ready(function() {
     // ================================
     // David's additions
 
+    // Bind keyboard
+    // $("#default").keyboard();
+    $("#inline").keyboard();
+
     // Generate session ID
     // From https://stackoverflow.com/a/19964557/4438760
     var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
