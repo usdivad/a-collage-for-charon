@@ -89,6 +89,10 @@ $(document).ready(function() {
     // Bind keyboard
     // $("#default").keyboard();
     $("#inline").keyboard();
+    // $(".button").bind("touchstart mousedown", function(event) {
+    //     console.log(event);
+    //     return false;
+    // });
 
     // Generate session ID
     // From https://stackoverflow.com/a/19964557/4438760
@@ -122,40 +126,49 @@ $(document).ready(function() {
     // - Figure out a better way to pass scale degree into handleTap()...
     // - Incorporate tap length using both touchstart and touchend?
 
-    $("#tappy0").bind("touchstart mousedown", function(event) {
-        handleTap(0);
-        return false;
-    });
-    $("#tappy1").bind("touchstart mousedown", function(event) {
-        handleTap(1);
-        return false;
-    });
-    $("#tappy2").bind("touchstart mousedown", function(event) {
-        handleTap(2);
-        return false;
-    });
-    $("#tappy3").bind("touchstart mousedown", function(event) {
-        handleTap(3);
-        return false;
-    });
-    $("#tappy4").bind("touchstart mousedown", function(event) {
-        handleTap(4);
-        return false;
-    });
-    $("#tappy5").bind("touchstart mousedown", function(event) {
-        handleTap(5);
+    // $("#tappy0").bind("touchstart mousedown", function(event) {
+    //     handleTap(0);
+    //     return false;
+    // });
+    // $("#tappy1").bind("touchstart mousedown", function(event) {
+    //     handleTap(1);
+    //     return false;
+    // });
+    // $("#tappy2").bind("touchstart mousedown", function(event) {
+    //     handleTap(2);
+    //     return false;
+    // });
+    // $("#tappy3").bind("touchstart mousedown", function(event) {
+    //     handleTap(3);
+    //     return false;
+    // });
+    // $("#tappy4").bind("touchstart mousedown", function(event) {
+    //     handleTap(4);
+    //     return false;
+    // });
+    // $("#tappy5").bind("touchstart mousedown", function(event) {
+    //     handleTap(5);
+    //     return false;
+    // });
+
+
+    // Send keyboard data to server
+    $(document).on("touchend", ".jqbtk-row .btn", function(e) {
+        var keyChar = $(this).attr("data-value");
+        handleTap(keyChar);
+        //console.log($(this).attr("data-value")); // this.getAttribute("data-value")
         return false;
     });
 
 
-    function handleTap(degree) {
+    function handleTap(keyChar) {
         // Construct tap data with timestamp
         var timestamp = Date.now();
         var tapData = {
             "id": sessionId,
             "timestamp": timestamp,
             "message": "tap",
-            "degree": degree // Scale degree
+            "keyChar": keyChar // Character
         }
 
         // Send start message if necessary
