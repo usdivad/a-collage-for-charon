@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>praeludium::conductor</title>
-    
+
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
 
@@ -14,8 +14,11 @@
     <script type="text/javascript" src="{{ url_for('static', filename='socket.io-1.3.5.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='popper-1.12.9.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='foswig.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='webmidi.min.js') }}"></script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='listener.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='praeludium.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='praeludium_conductor.js') }}"></script>
 </head>
 <body>
     <div id="channels">

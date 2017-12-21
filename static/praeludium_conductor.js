@@ -123,11 +123,15 @@ $(document).ready(function() {
                 // - Current song selection
                 // - Markov
                 // var midiNote = midiNotes[Math.floor(msgData["degree"] * midiNotes.length)]
-                var degree = msgData["degree"];
-                var midiNotes = midiNotesBySong[getCurrSong()];
-                console.log(getCurrSong() + ": " + midiNotes);
-                var midiNote = midiNotes[Math.max(0, Math.min(degree, midiNotes.length))];
-                // var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
+                
+                // var degree = msgData["degree"];
+                // var midiNotes = midiNotesBySong[getCurrSong()];
+                // console.log(getCurrSong() + ": " + midiNotes);
+                // var midiNote = midiNotes[Math.max(0, Math.min(degree, midiNotes.length))];
+                // // var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
+
+                var keyChar = msgData["keyChar"];
+                var midiNote = midiNotesByChar[keyChar];
 
                 // Channel
                 // TODO: Increment channel num and use modulo
@@ -246,6 +250,21 @@ $(document).ready(function() {
         "12. A New Home_8x.mp3": ["A3", "D4", "G4", "A4", "C5", "D5"],
         "13. Orange Grey Skies (Reprise)_8x.mp3": ["A4", "B4", "C#5", "E5", "F#5", "A5"],
     };
+
+    // MIDI notes for Praeludium
+    var midiNotesByChar = {};
+    var midiScale = ["C", "D", "E", "F", "G", "A", "B"];
+    var midiBaseOctave = 1;
+    var availableChars = Praeludium.alphabet.split("");
+    for (var i=0; i<availableChars.length; i++) {
+        var c = availableChars[i];
+        var pitch = midiScale[i % midiScale.length]
+        var octave = (Math.floor(i / midiScale.length) + midiBaseOctave).toString();
+        var note = pitch + octave;
+        midiNotesByChar[c] = note;
+    }
+    console.log(midiNotesByChar);
+
     var midiNumChannels = 10;
     var sessionIdToMidiChannelNum = {};
     var numSessions = 0;

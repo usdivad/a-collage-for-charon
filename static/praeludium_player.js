@@ -87,7 +87,7 @@ $(document).ready(function() {
     // David's additions
 
     // Construct keyboard layout
-    var availableChars = "abcdefghijklmnopqrstuvwxyz1234567890.,?!".split("");
+    var availableChars = Praeludium.alphabet.split("");
     shuffle(availableChars);
     var numCharsPerRow = 4;
     var keyboardLayout = [];
@@ -113,8 +113,8 @@ $(document).ready(function() {
 
     // Generate session ID
     // From https://stackoverflow.com/a/19964557/4438760
-    var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    var sessionId = Array(12).join().split(',').map(function() { return alphabet.charAt(Math.floor(Math.random() * alphabet.length)); }).join("");
+    var sessionIdAlphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var sessionId = Array(12).join().split(',').map(function() { return sessionIdAlphabet.charAt(Math.floor(Math.random() * sessionIdAlphabet.length)); }).join("");
 
     // Stop recording if idle for a given amount of time
     var isRecording = false;
