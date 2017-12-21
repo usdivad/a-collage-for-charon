@@ -154,7 +154,8 @@ $(document).ready(function() {
                 if (!midiOutput) {
                   return;
                 }
-                midiOutput.playNote(midiNote, midiChannelNum, {"duration": "100"});
+                var dur = (Math.random() * 2000) + 500;
+                midiOutput.playNote(midiNote, midiChannelNum, {"duration": dur});
                 console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                 // midiOutput.playNote("C4");
             }
