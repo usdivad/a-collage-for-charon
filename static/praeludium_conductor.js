@@ -265,7 +265,7 @@ $(document).ready(function() {
     }
     console.log(midiNotesByChar);
 
-    var midiNumChannels = 10;
+    var midiNumChannels = 8;
     var sessionIdToMidiChannelNum = {};
     var numSessions = 0;
     var currSong = "02. Moondrops_8x.mp3";

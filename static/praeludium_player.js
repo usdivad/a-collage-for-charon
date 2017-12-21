@@ -170,7 +170,7 @@ $(document).ready(function() {
 
 
     // Send keyboard data to server
-    $(document).on("touchend", ".jqbtk-row .btn", function(e) {
+    $(document).on("touchstart mousedown", ".jqbtk-row .btn", function(e) {
         var keyChar = $(this).attr("data-value");
         handleTap(keyChar);
         //console.log($(this).attr("data-value")); // this.getAttribute("data-value")
