@@ -174,6 +174,9 @@ $(document).ready(function() {
     // Send keyboard data to server
     $(document).on("touchstart mousedown", ".jqbtk-row .btn", function(e) {
         var keyChar = $(this).attr("data-value");
+        if (keyChar == "space") {
+            keyChar = " ";
+        }
         handleTap(keyChar);
         //console.log($(this).attr("data-value")); // this.getAttribute("data-value")
 
