@@ -104,6 +104,7 @@ $(document).ready(function() {
     $("#inline").keyboard({
         layout: keyboardLayout
     });
+    $("#inline").remove();
 
     // Adjust style
     $(".btn").css("width", "4.4em");
