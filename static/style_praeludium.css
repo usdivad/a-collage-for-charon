@@ -1,8 +1,11 @@
-.button {
-    width: 125%;
-    height: 125%;
+body {
+    /*text-align: center;*/
 }
 
-.keyboard-container {
-    height: 800px;
+#disp {
+    font-family: Courier, monospace;
+    font-size: 125%;
+    color: white;
+    background: black;
+    margin: 20px 5px;
 }

@@ -107,10 +107,11 @@ $(document).ready(function() {
     $("#inline").remove();
 
     // Adjust style
-    $(".btn").css("width", "4.4em");
-    $(".btn").css("height", "4em");
-    $(".jqbtk-space").css("width", "13.2em");
-    $(".keyboard-container").css("height", "1200px");
+    $(".btn").css("width", "6.6em");
+    $(".btn").css("height", "6em");
+    $(".jqbtk-space").css("width", "16em");
+    $(".keyboard-container").css("height", "1600px");
+    // $(".keyboard-container").css("text-align", "center");
 
     // Generate session ID
     // From https://stackoverflow.com/a/19964557/4438760
@@ -175,6 +176,9 @@ $(document).ready(function() {
         var keyChar = $(this).attr("data-value");
         handleTap(keyChar);
         //console.log($(this).attr("data-value")); // this.getAttribute("data-value")
+
+        $("#disp").text($("#disp").text() + keyChar);
+
         return false;
     });
 
