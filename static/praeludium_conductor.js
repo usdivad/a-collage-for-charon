@@ -296,6 +296,9 @@ $(document).ready(function() {
             // console.log(WebMidi.outputs);
 
             midiOutput = WebMidi.getOutputByName(midiOutputName);
+            
+            // Play base drone
+            midiOutput.playNote("C1", melodyMidiChannel);
         }
     });
 
