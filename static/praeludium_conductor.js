@@ -296,9 +296,6 @@ $(document).ready(function() {
             // console.log(WebMidi.outputs);
 
             midiOutput = WebMidi.getOutputByName(midiOutputName);
-            
-            // Play base drone
-            midiOutput.playNote("C1", melodyMidiChannel);
         }
     });
 
@@ -317,10 +314,19 @@ $(document).ready(function() {
     var melodyMidiChannel = midiNumChannels + 1; // 9
     var countermelodyMidiChannel = melodyMidiChannel + 1; // 10
     var melodyOct = 2;
+    var droneInterval = 17;
+    var droneCount = 0;
 
+    // Setup transport
     Tone.Transport.start();
     Tone.Transport.bpm.value = melodyBPM;
+
+    // Play underlying melody
     Tone.Transport.scheduleRepeat(function(time) {
+        if (midiOutput === undefined) {
+            return;
+        }
+
         console.log(melodyIdx);
         var shouldSwitchMelody = false;
 
@@ -382,4 +388,19 @@ $(document).ready(function() {
         }
 
     }, "4n");
+    
+    // Play base drone
+    Tone.Transport.scheduleRepeat(function(time) {
+        if (midiOutput === undefined) {
+            return;
+        }
+        
+        if (droneCount % droneInterval == 0) {
+            midiOutput.playNote("C1", melodyMidiChannel);
+            console.log("Playing drone");
+        }
+
+        droneCount++;
+    }, "8n");
+
 });
