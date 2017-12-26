@@ -98,7 +98,7 @@ $(document).ready(function() {
         }
         keyboardLayout[rowNum].push(availableChars[i]);
     }
-    keyboardLayout.push([["space", "space"]]);
+    keyboardLayout.push([["space", "space"], ["enter", "enter"]]);
 
     // Bind keyboard
     $("#inline").keyboard({
@@ -174,6 +174,13 @@ $(document).ready(function() {
     // Send keyboard data to server
     $(document).on("touchstart mousedown", ".jqbtk-row .btn", function(e) {
         var keyChar = $(this).attr("data-value");
+
+        if (keyChar == "enter") {
+            $("#disp").text("");
+            handleTap(" ");
+            return false;
+        }
+
         if (keyChar == "space") {
             keyChar = " ";
         }

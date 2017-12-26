@@ -9,3 +9,7 @@ body {
     background: black;
     margin: 20px 5px;
 }
+
+.debugArea {
+display: none;
+}
