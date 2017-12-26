@@ -305,13 +305,15 @@ $(document).ready(function() {
 
     // Underlying melody for Praeludium
     var melodiesById = {};
-    var melodyBPM = 120;
+    var melodyBPM = 60;
     var melodyIdx = 0;
     var currMelodyId = "";
     var melodyPlayPrb = 0.5;
+    var countermelodyPlayPrb = 0.5;
     var melodyPrevNote = "C1";
-    var melodyMidiChannel = midiNumChannels + 1;
-    var melodyOct = 1;
+    var melodyMidiChannel = midiNumChannels + 1; // 9
+    var countermelodyMidiChannel = melodyMidiChannel + 1; // 10
+    var melodyOct = 2;
 
     Tone.Transport.start();
     Tone.Transport.bpm.value = melodyBPM;
@@ -346,6 +348,7 @@ $(document).ready(function() {
 
         // Play note and increment
         var melodyPlayRand = Math.random();
+        var countermelodyPlayRand = Math.random();
         if (melodyPlayRand < melodyPlayPrb) {
             var melodyNote = melodiesById[currMelodyId][melodyIdx];
             melodyNote = melodyNote[0] + melodyOct.toString();
@@ -357,6 +360,22 @@ $(document).ready(function() {
             
             melodyIdx++;
             melodyPrevNote = melodyNote;
+        }
+        if (countermelodyPlayRand < countermelodyPlayPrb) {
+            var melodyNotes = melodiesById[currMelodyId];
+            var melodyNote = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+
+            if (parseInt(melodyNote[1]) < 2) {
+                melodyNote = melodyNote[0] + "2";
+            }
+
+            if (parseInt(melodyNote[1]) > 4) {
+                melodyNote = melodyNote[0] + "4";
+            }
+
+            midiOutput.playNote(melodyNote, countermelodyMidiChannel, {"duration": 250});
+
+            console.log("Playing note (" + melodyNote + ") for countermelody");
         }
 
     }, "4n");
