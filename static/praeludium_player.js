@@ -87,7 +87,7 @@ $(document).ready(function() {
     // David's additions
 
     // Construct keyboard layout
-    var availableChars = Praeludium.alphabet.split("");
+    var availableChars = Praeludium.alphabet.replace(" ", "").split("");
     shuffle(availableChars);
     var numCharsPerRow = 4;
     var keyboardLayout = [];
