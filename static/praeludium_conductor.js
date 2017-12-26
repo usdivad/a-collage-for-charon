@@ -309,6 +309,9 @@ $(document).ready(function() {
     var melodyIdx = 0;
     var currMelodyId = "";
     var melodyPlayPrb = 0.5;
+    var melodyPrevNote = "C1";
+    var melodyMidiChannel = midiNumChannels + 1;
+    var melodyOct = 1;
 
     Tone.Transport.start();
     Tone.Transport.bpm.value = melodyBPM;
@@ -345,10 +348,16 @@ $(document).ready(function() {
         var melodyPlayRand = Math.random();
         if (melodyPlayRand < melodyPlayPrb) {
             var melodyNote = melodiesById[currMelodyId][melodyIdx];
-            midiOutput.playNote(melodyNote, 1, {"duration": 100}); // TODO: Change channel, oct
+            melodyNote = melodyNote[0] + melodyOct.toString();
+            console.log(melodyNote);
+
+            midiOutput.stopNote(melodyPrevNote, melodyMidiChannel);
+            midiOutput.playNote(melodyNote, melodyMidiChannel);
             console.log("Playing note #" + melodyIdx + " (" + melodyNote + ")" + " for melody " + currMelodyId);
+            
             melodyIdx++;
+            melodyPrevNote = melodyNote;
         }
 
-    }, "16n");
+    }, "4n");
 });
