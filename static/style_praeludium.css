@@ -8,8 +8,13 @@ body {
     color: white;
     background: black;
     margin: 20px 5px;
+    white-space: pre-wrap;
 }
 
 .debugArea {
-display: none;
+    display: none;
 }
+
+/*#praeludiumResolutions {
+
+}*/

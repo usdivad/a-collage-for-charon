@@ -165,8 +165,19 @@ $(document).ready(function() {
                 // Append to melody
                 if (!melodiesById.hasOwnProperty(sessionId)) {
                     melodiesById[sessionId] = [];
+                    Praeludium.sessionTextsById[sessionId] = [];
                 }
                 melodiesById[sessionId].push(midiNote);
+                Praeludium.sessionTextsById[sessionId].push(keyChar);
+
+                // Print texts
+                var idKeys = Object.keys(melodiesById);
+                var melodyTexts = [];
+                for (var i=0; i<idKeys.length; i++) {
+                    var melody = Praeludium.sessionTextsById[idKeys[i]];
+                    melodyTexts.push(melody.join(""));
+                }
+                $("#disp").html(melodyTexts.join("<br>"));
             }
         }
 
@@ -394,7 +405,7 @@ $(document).ready(function() {
         if (midiOutput === undefined) {
             return;
         }
-        
+
         if (droneCount % droneInterval == 0) {
             midiOutput.playNote("C1", melodyMidiChannel);
             console.log("Playing drone");

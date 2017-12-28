@@ -176,6 +176,7 @@ $(document).ready(function() {
         var keyChar = $(this).attr("data-value");
 
         if (keyChar == "enter") {
+            location.reload();
             $("#disp").text("");
             handleTap(" ");
             return false;

@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_praeludium.css') }}">
 
 
     <!-- JS -->
@@ -58,6 +59,12 @@
     <br/>
     <hr/>
     <br/>
+
+    <div id="disp">
+    <!-- <div id="praeludiumResolutions"> -->
+    </div>
+
+    <br><br>
 
     <p>Async mode is: <b>{{ async_mode }}</b></p>
     <p>Average ping/pong latency: <b><span id="ping-pong"></span>ms</b></p>
