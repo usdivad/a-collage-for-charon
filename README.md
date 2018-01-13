@@ -43,7 +43,7 @@ npm install
         - The way the "players" work is that each device gets assigned a different MIDI channel, which corresponds to one of the instruments in the Ableton project. For more details check out `socket.on('my_response'` in *static/biodance_conductor.js*
 
 ### Editing things
-**JavaScript: Biosignals -> MIDI values**
+#### JavaScript: Biosignals -> MIDI values
 You can add/edit musical mappings in `static/biodance_conductor.js`. It uses the WebMidi.js (https://github.com/cotejp/webmidi) library to send MIDI.
 
 - On the biosignals side, if you take a look at `socket.on('biosignal_data'` in *static/biodance_conductor.js* (currently line 33 as of 1/13/2018), you'll see a bunch of `midiOutput.sendControlChange`s and `midiOutput.playNote`s. This is where everything happens; see the source or "Example mappings" below for more details.
@@ -57,7 +57,7 @@ You can add/edit musical mappings in `static/biodance_conductor.js`. It uses the
     in the JavaSript console to get a list of available MIDI outputs.
 
 
-**Ableton: MIDI values -> musical parameters**
+#### Ableton: MIDI values -> musical parameters
 On the Ableton side, in order to map MIDI params you need to:
 1. Go to *Options > Edit MIDI Map* (or Cmd+M)
 2. Click the parameter in Ableton you want to map to, e.g. panning of an instrument. It should show up as subtly outlined in the UI.
@@ -66,7 +66,7 @@ On the Ableton side, in order to map MIDI params you need to:
     - Alternately, if you have an actual MIDI controller you can just twiddle a knob/press a note to trigger it
 
 
-**Example mappings**
+#### Example mappings
 As of 1/13/2018, the mappings between **static/biodance_conductor.js** and **morse Project/biomorse_native.als** are:
 - BPM (from HR biosignal) -> MIDI CC 1 -> Song Tempo
 - Flex biosignal -> MIDI CC 2 -> Drive parameter on Overdrive for Master channel
