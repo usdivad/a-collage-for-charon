@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+        <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.4.2.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='foswig.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='webmidi.min.js') }}"></script>
+        
+        <script type="text/javascript" src="{{ url_for('static', filename='midi_mapping_helper.js') }}"></script>
+    </head>
+    <body>
+        <h1>MIDI Mapping Helper</h1>
+        Handy tool for mapping to Ableton
+
+        <br><br>
+
+        <h3>Trigger MIDI CC</h3>
+        CC number:
+        <input id="midiCCNum" type="number" value="1">
+        <button id="midiCCTrigger">Trigger</button>
+
+        <br><br>
+
+        <h3>Trigger MIDI Note</h3>
+        Note name (letter+octave):
+        <input id="midiNoteName" value="C4">
+        <button id="midiNoteTrigger">Trigger</button>        
+    </body>
+</html>
