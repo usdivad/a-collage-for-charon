@@ -12,6 +12,8 @@ var socket = require('socket.io-client')('http://localhost:5000/test');
 var fs = require('fs');
 var stream = null;
 
+console.log("Node server started");
+
 socket.on('connect', function() {
   console.log('connected');
 });

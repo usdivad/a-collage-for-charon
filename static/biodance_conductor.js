@@ -105,8 +105,6 @@ $(document).ready(function() {
         // Send MIDI
         // TODO: Construct list and Markov chain and all that good stuff
         if (midiEnabled) {
-            var midiNote = "C4";
-
             // Message data
             console.log(msg.data);
             var msgData = {};
@@ -125,16 +123,11 @@ $(document).ready(function() {
                 // - Current song selection
                 // - Markov
                 // var midiNote = midiNotes[Math.floor(msgData["degree"] * midiNotes.length)]
-                
-                // var degree = msgData["degree"];
-                // var midiNotes = midiNotesBySong[getCurrSong()];
-                // console.log(getCurrSong() + ": " + midiNotes);
-                // var midiNote = midiNotes[Math.max(0, Math.min(degree, midiNotes.length))];
-                // // var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
-
-                var keyChar = msgData["keyChar"];
-                // var midiNote = midiNotesByChar[keyChar];
-                midiNote = midiNotesByChar[keyChar];
+                var degree = msgData["degree"];
+                var midiNotes = midiNotesBySong[getCurrSong()];
+                console.log(getCurrSong() + ": " + midiNotes);
+                var midiNote = midiNotes[Math.max(0, Math.min(degree, midiNotes.length))];
+                // var midiNote = midiNotes[Math.floor(Math.random() * midiNotes.length)];
 
                 // Channel
                 // TODO: Increment channel num and use modulo
@@ -157,34 +150,16 @@ $(document).ready(function() {
                 if (!midiOutput) {
                   return;
                 }
-                var dur = (Math.random() * 2000) + 500;
-                midiOutput.playNote(midiNote, midiChannelNum, {"duration": dur});
+                midiOutput.playNote(midiNote, midiChannelNum, {"duration": "100"});
                 console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                 // midiOutput.playNote("C4");
-
-                // Append to melody
-                if (!melodiesById.hasOwnProperty(sessionId)) {
-                    melodiesById[sessionId] = [];
-                    Praeludium.sessionTextsById[sessionId] = [];
-                }
-                melodiesById[sessionId].push(midiNote);
-                Praeludium.sessionTextsById[sessionId].push(keyChar);
-
-                // Print texts
-                var idKeys = Object.keys(melodiesById);
-                var melodyTexts = [];
-                for (var i=0; i<idKeys.length; i++) {
-                    var melody = Praeludium.sessionTextsById[idKeys[i]];
-                    melodyTexts.push(melody.join(""));
-                }
-                $("#disp").html(melodyTexts.join("<br>"));
             }
         }
 
         // $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
         // $('#log').html('Received #' + msg.count + ': ' + msg.data);
 
-        var logMsg = "[" + new Date().toJSON() + "]: #" + msg.count + ": " + msg.data + "(" + midiNote + ")";
+        var logMsg = "[" + new Date().toJSON() + "]: #" + msg.count + ": " + msg.data;
         if (mostRecentTaps.length >= numMostRecentTaps) {
             // mostRecentTaps[msg.count % numMostRecentTaps] = logMsg;
             mostRecentTaps.pop();
@@ -271,22 +246,7 @@ $(document).ready(function() {
         "12. A New Home_8x.mp3": ["A3", "D4", "G4", "A4", "C5", "D5"],
         "13. Orange Grey Skies (Reprise)_8x.mp3": ["A4", "B4", "C#5", "E5", "F#5", "A5"],
     };
-
-    // MIDI notes for Praeludium
-    var midiNotesByChar = {};
-    var midiScale = ["C", "D", "E", "F", "G", "A", "B"];
-    var midiBaseOctave = 2;
-    var availableChars = Praeludium.alphabet.split("");
-    for (var i=0; i<availableChars.length; i++) {
-        var c = availableChars[i];
-        var pitch = midiScale[i % midiScale.length]
-        var octave = (Math.floor(i / midiScale.length) + midiBaseOctave).toString();
-        var note = pitch + octave;
-        midiNotesByChar[c] = note;
-    }
-    console.log(midiNotesByChar);
-
-    var midiNumChannels = 8;
+    var midiNumChannels = 10;
     var sessionIdToMidiChannelNum = {};
     var numSessions = 0;
     var currSong = "02. Moondrops_8x.mp3";
@@ -307,118 +267,12 @@ $(document).ready(function() {
             // console.log(WebMidi.outputs);
 
             midiOutput = WebMidi.getOutputByName(midiOutputName);
+            //midiOutput.sendControlChange(3, 5);
         }
     });
 
     function getCurrSong() {
         return currSong;
-    }
-
-    // Underlying melody for Praeludium
-    var melodiesById = {};
-    var melodyBPM = 60;
-    var melodyIdx = 0;
-    var currMelodyId = "";
-    var melodyPlayPrb = 0.5;
-    var countermelodyPlayPrb = 0.5;
-    var melodyPrevNote = "C1";
-    var melodyMidiChannel = midiNumChannels + 1; // 9
-    var countermelodyMidiChannel = melodyMidiChannel + 1; // 10
-    var melodyOct = 2;
-    var droneInterval = 17;
-    var droneCount = 0;
-
-    // Setup transport
-    Tone.Transport.start();
-    Tone.Transport.bpm.value = melodyBPM;
-
-    // Play underlying melody
-    Tone.Transport.scheduleRepeat(function(time) {
-        if (midiOutput === undefined) {
-            return;
-        }
-
-        console.log(melodyIdx);
-        var shouldSwitchMelody = false;
-
-        // if (melodiesById.hasOwnProperty(currMelodyId)) {
-        //     melodyIdx = melodyIdx % melodiesById[currMelodyId].length;
-        // }
-
-        // Determine if we need to set new melody
-        if (melodiesById.hasOwnProperty(currMelodyId)) {
-            if (melodyIdx >= melodiesById[currMelodyId].length) {
-                shouldSwitchMelody = true;
-            }
-        }
-        else {
-            shouldSwitchMelody = true;
-        }
-
-        // Choose melody ID if we need a new one
-        if (shouldSwitchMelody) {
-        //if (currMelodyId == "" || melodyIdx == 0) {
-            var idKeys = Object.keys(melodiesById);
-            if (idKeys.length < 1) {
-                return;
-            }
-            currMelodyId = idKeys[Math.floor(Math.random() * idKeys.length)];
-            melodyIdx = 0;
-        }
-
-        // Play note and increment
-        var melodyPlayRand = Math.random();
-        var countermelodyPlayRand = Math.random();
-        if (melodyPlayRand < melodyPlayPrb) {
-            var melodyNote = melodiesById[currMelodyId][melodyIdx];
-            melodyNote = melodyNote[0] + melodyOct.toString();
-            console.log(melodyNote);
-
-            midiOutput.stopNote(melodyPrevNote, melodyMidiChannel);
-            midiOutput.playNote(melodyNote, melodyMidiChannel);
-            console.log("Playing note #" + melodyIdx + " (" + melodyNote + ")" + " for melody " + currMelodyId);
-            
-            melodyIdx++;
-            melodyPrevNote = melodyNote;
-        }
-        if (countermelodyPlayRand < countermelodyPlayPrb) {
-            var melodyNotes = melodiesById[currMelodyId];
-            var melodyNote = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
-
-            if (parseInt(melodyNote[1]) < 2) {
-                melodyNote = melodyNote[0] + "2";
-            }
-
-            if (parseInt(melodyNote[1]) > 4) {
-                melodyNote = melodyNote[0] + "4";
-            }
-
-            midiOutput.playNote(melodyNote, countermelodyMidiChannel, {"duration": 250});
-
-            var logMsg = var logMsg = "[" + new Date().toJSON() + "]: ";
-            logMsg += "Playing note (" + melodyNote + ") for countermelody";
-            console.log(logMsg);
-
-        }
-
-    }, "4n");
-    
-    // Play base drone
-    Tone.Transport.scheduleRepeat(function(time) {
-        if (midiOutput === undefined) {
-            return;
-        }
-
-        if (droneCount % droneInterval == 0) {
-            midiOutput.playNote("C1", melodyMidiChannel);
-            console.log("Playing drone");
-        }
-
-        droneCount++;
-    }, "8n");
-
-    function addToMelodyLog(msg) {
-        
     }
 
 });

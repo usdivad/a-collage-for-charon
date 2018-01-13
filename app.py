@@ -44,6 +44,14 @@ def praeludium_player():
 def praeludium_conductor():
     return render_template('praeludium_conductor.html', async_mode=socketio.async_mode)
 
+@app.route('/biodance_player')
+def biodance_player():
+    return render_template('biodance_player.html', async_mode=socketio.async_mode)
+
+@app.route('/biodance_conductor')
+def biodance_conductor():
+    return render_template('biodance_conductor.html', async_mode=socketio.async_mode)
+
 @socketio.on('my_event', namespace='/test')
 def test_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
@@ -125,6 +133,6 @@ def test_disconnect():
 
 
 if __name__ == '__main__':
-    print("MOOO")
+    print("Flask server started")
     port = int(os.environ.get('PORT', 5000))
     socketio.run(app, port=port, debug=True)
