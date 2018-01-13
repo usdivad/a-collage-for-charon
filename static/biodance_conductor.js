@@ -31,6 +31,7 @@ $(document).ready(function() {
     var bpmInit = false;
 
     socket.on('biosignal_data', function (data) {
+        // Update biosignal values
         oldHr = hr;
         flex = data.flex; 
         hr = data.hr;
@@ -42,24 +43,29 @@ $(document).ready(function() {
         $('#flex').text(flex);
         $('#eda').text(eda);
 
-
-
+        // Scale and send flex data stream as CC 2
         midiOutput.sendControlChange(2, Math.max(0, Math.min(127, ((flex-200) / 500) * 127 )));
+
+        // Scale and send EDA data stream as CC 3
         midiOutput.sendControlChange(3, Math.max(0, Math.min(127, (eda/300) * 127)));
+
+        // If EDA exceeds a given threshold, play B4 on MIDI channel 11
         if (eda > 500) {
             midiOutput.playNote("B4", 11, {"duration": 100});
         }
 
+        // If a heartbeat is detected, play C2 on MIDI channel 11
         if(hr - oldHr > thresh && now - lastBeat > .4){
-        //beatOn
-        midiOutput.playNote("C2", 11, {"duration": 100});
+            //beatOn
+            midiOutput.playNote("C2", 11, {"duration": 100});
 
-
-          document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.8)';
-        lastBeat = new Date().getTime()/1000;
+            document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.8)';
+            lastBeat = new Date().getTime()/1000;
         } else {
-          document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.1)';
+            document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.1)';
         }
+
+
         now = new Date().getTime()/1000;
         if (!bpmInit) {
           if(now - prev >= 60) { 
