@@ -32,11 +32,11 @@ $(document).ready(function() {
     var delay = 20;
     var buffer = [[], [], [], [], []];
     var bpmInit = [false, false, false, false, false];
-    var midiChannels = [1,2,3,4,5];
-    var midiCCNums = {
-      "flex": [1,2,3,4,5],
-      "hr": [6,7,8,9,10],
-      "eda": [11,12,13,14,15],
+    var midiParams = {
+      "channel": [1,2,3,4,5],
+      "flexCC": [1,2,3,4,5],
+      "hrCC": [6,7,8,9,10],
+      "edaCC": [11,12,13,14,15],
       "edaNote": ["C2", "G2", "C3", "G3", "C4"],
       "heartbeatNote": ["C5", "C5", "C5", "C5", "C5"]
     };
@@ -56,12 +56,12 @@ $(document).ready(function() {
         //
 
         // MIDI params
-        var midiChannel = midiChannels[id];
-        var midiCCFlex = midiCCNums["flex"][id];
-        var midiCCHr = midiCCNums["hr"][id];
-        var midiCCEda = midiCCNums["eda"][id];
-        var midiCCEdaNote = midiCCNums["edaNote"][id];
-        var midiCCHeartbeatNote = midiCCNums["heartbeatNote"][id];
+        var midiChannel = midiParams["channel"][id];
+        var midiCCFlex = midiParams["flexCC"][id];
+        var midiCCHr = midiParams["hrCC"][id];
+        var midiCCEda = midiParams["edaCC"][id];
+        var midiEdaNote = midiParams["edaNote"][id];
+        var midiHeartbeatNote = midiParams["heartbeatNote"][id];
 
         buffer[id].push(hr);
 
@@ -76,24 +76,44 @@ $(document).ready(function() {
         $(flex_id).text(flex[id]);
         $(eda_id).text(eda[id]);
 
-        // Scale and send flex data stream as CC 2
+
+        // --------------------------------
+        // SEND MIDI
+
+        // CC
+
+        // Scale and send flex data stream as CC
         // midiOutput.sendControlChange(2, Math.max(0, Math.min(127, ((flex[id]-200) / 500) * 127 )));
+        midiOutput.sendControlChange(midiCCFlex, scaleBiosignalToMidi(flex[id]));
+        console.log("flex: " + flex[id] + " --> " + scaleBiosignalToMidi(flex[id]));
 
-        // Scale and send EDA data stream as CC 3
+        // Scale and send EDA data stream as CC
         // midiOutput.sendControlChange(3, Math.max(0, Math.min(127, (eda[id]/300) * 127)));
+        midiOutput.sendControlChange(midiCCEda, scaleBiosignalToMidi(eda[id]));
+        console.log("eda: " + eda[id] + " --> " + scaleBiosignalToMidi(eda[id]));
 
-        // If EDA exceeds a given threshold, play B4 on MIDI channel 11
+
+        // Scale and send heart rate data stream as CC
+        midiOutput.sendControlChange(midiCCHr, scaleBiosignalToMidi(hr[id]));
+        console.log("hr: " + hr[id] + " --> " + scaleBiosignalToMidi(hr[id]));
+
+
+        // Notes
+
+        // If EDA exceeds a given threshold, play note on MIDI channel
         if (eda[id] > 500) {
-            midiOutput.playNote(midiCCEdaNote, midiChannel, {"duration": 100});
+            midiOutput.playNote(midiEdaNote, midiChannel, {"duration": 100});
+            console.log("edaNote: " + midiEdaNote + ", " + midiChannel);
         }
 
-        // If a heartbeat is detected, play C2 on MIDI channel 11
+        // If a heartbeat is detected, play note on MIDI channel
         channel_id = 'channel-bpm-' + _id;
         console.log(lastBeat, hr, oldHr, now);
         if(hr[id] - oldHr[id] > thresh && now[id] - lastBeat[id] > .4){
             console.log("beat: " + _id);
             //beatOn
-            midiOutput.playNote(midiCCHeartbeatNote, midiChannel, {"duration": 100});
+            midiOutput.playNote(midiHeartbeatNote, midiChannel, {"duration": 100});
+            console.log("heartbeatNote: " + midiHeartbeatNote + ", " + midiChannel);
             document.getElementById(channel_id).style.background = 'rgba(255,0,0,0.8)';
             lastBeat[id] = new Date().getTime()/1000;
         } else {
@@ -102,6 +122,7 @@ $(document).ready(function() {
         }
 
 
+        // Calculate BPM
         now[id] = new Date().getTime()/1000;
         if (!bpmInit[id]) {
           if(now - prev >= 60) {
@@ -140,6 +161,13 @@ $(document).ready(function() {
       }
       setBPM(_bpm, id);
     }
+
+    function scaleBiosignalToMidi(biosignal) {
+        var midiValue = (biosignal / 1024) * 127;
+        midiValue = Math.floor(Math.max(0, Math.min(midiValue, 127)));
+        return midiValue;
+    }
+
 // Event handler for server sent data.
     // The callback function is invoked whenever the server emits data
     // to the client. The data is then displayed in the "Received"
