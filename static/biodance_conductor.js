@@ -17,78 +17,115 @@ $(document).ready(function() {
     socket.on('connect', function() {
         socket.emit('my_event', {data: 'I\'m connected!'});
         });
-    var flex = 0,
-        hr = 0,
-        oldHr = 0, 
+    var flex = [0, 0, 0, 0, 0],
+        hr = [0, 0, 0, 0, 0],
+        oldHr = [0, 0, 0, 0, 0],
         thresh = 50,
-        bpm = 0,
-        eda = 0;
-    var prev = new Date().getTime()/1000;
-    var now = new Date().getTime()/1000;
-    var lastBeat = new Date().getTime()/1000;
+        bpm = [0, 0, 0, 0, 0],
+        eda = [0, 0, 0, 0, 0];
+    var _prev = new Date().getTime()/1000;
+    var _now = new Date().getTime()/1000;
+    var _lastBeat = new Date().getTime()/1000;
+    var prev = [_prev, _prev, _prev, _prev, _prev];
+    var now = [_now, _now, _now, _now, _now];
+    var lastBeat = [_lastBeat, _lastBeat, _lastBeat, _lastBeat, _lastBeat];
     var delay = 20;
-    var buffer = [];
-    var bpmInit = false;
+    var buffer = [[], [], [], [], []];
+    var bpmInit = [false, false, false, false, false];
+    var midiChannels = [1,2,3,4,5];
+    var midiCCNums = {
+      "flex": [1,2,3,4,5],
+      "hr": [6,7,8,9,10],
+      "eda": [11,12,13,14,15],
+      "edaNote": ["C2", "G2", "C3", "G3", "C4"],
+      "heartbeatNote": ["C5", "C5", "C5", "C5", "C5"]
+    };
+
+
 
     socket.on('biosignal_data', function (data) {
         // Update biosignal values
-        oldHr = hr;
-        flex = data.flex; 
-        hr = data.hr;
-        eda = data.eda; 
-        buffer.push(hr);
+        id = data.id;
+        _id = id + 1;
+        oldHr[id] = hr[id];
+        flex[id] = data.flex;
+        hr[id] = data.hr;
+        eda[id] = data.eda;
+        console.log("id: " + id);
+        // console.log(id);
+        //
+
+        // MIDI params
+        var midiChannel = midiChannels[id];
+        var midiCCFlex = midiCCNums["flex"][id];
+        var midiCCHr = midiCCNums["hr"][id];
+        var midiCCEda = midiCCNums["eda"][id];
+        var midiCCEdaNote = midiCCNums["edaNote"][id];
+        var midiCCHeartbeatNote = midiCCNums["heartbeatNote"][id];
+
+        buffer[id].push(hr);
+
         if (bpmInit) {
-          buffer.shift();
+          buffer[id].shift();
         }
-        $('#flex').text(flex);
-        $('#eda').text(eda);
+        flex_id = '#flex-' + _id;
+        if (eda[id] == 1023) {
+          console.log(_id);
+        }
+        eda_id = '#eda-' + _id;
+        $(flex_id).text(flex[id]);
+        $(eda_id).text(eda[id]);
 
         // Scale and send flex data stream as CC 2
-        midiOutput.sendControlChange(2, Math.max(0, Math.min(127, ((flex-200) / 500) * 127 )));
+        // midiOutput.sendControlChange(2, Math.max(0, Math.min(127, ((flex[id]-200) / 500) * 127 )));
 
         // Scale and send EDA data stream as CC 3
-        midiOutput.sendControlChange(3, Math.max(0, Math.min(127, (eda/300) * 127)));
+        // midiOutput.sendControlChange(3, Math.max(0, Math.min(127, (eda[id]/300) * 127)));
 
         // If EDA exceeds a given threshold, play B4 on MIDI channel 11
-        if (eda > 500) {
-            midiOutput.playNote("B4", 11, {"duration": 100});
+        if (eda[id] > 500) {
+            midiOutput.playNote(midiCCEdaNote, midiChannel, {"duration": 100});
         }
 
         // If a heartbeat is detected, play C2 on MIDI channel 11
-        if(hr - oldHr > thresh && now - lastBeat > .4){
+        channel_id = 'channel-bpm-' + _id;
+        console.log(lastBeat, hr, oldHr, now);
+        if(hr[id] - oldHr[id] > thresh && now[id] - lastBeat[id] > .4){
+            console.log("beat: " + _id);
             //beatOn
-            midiOutput.playNote("C2", 11, {"duration": 100});
-
-            document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.8)';
-            lastBeat = new Date().getTime()/1000;
+            midiOutput.playNote(midiCCHeartbeatNote, midiChannel, {"duration": 100});
+            document.getElementById(channel_id).style.background = 'rgba(255,0,0,0.8)';
+            lastBeat[id] = new Date().getTime()/1000;
         } else {
-            document.getElementById("channel-bpm").style.background = 'rgba(255,0,0,0.1)';
+            console.log("no beat: " + _id);
+            document.getElementById(channel_id).style.background = 'rgba(255,0,0,0.1)';
         }
 
 
-        now = new Date().getTime()/1000;
-        if (!bpmInit) {
-          if(now - prev >= 60) { 
-            processBPM(buffer, thresh);
-            prev = now;
-            bpmInit = true;
+        now[id] = new Date().getTime()/1000;
+        if (!bpmInit[id]) {
+          if(now - prev >= 60) {
+            processBPM(buffer[id], thresh, _id);
+            prev[id] = now[id];
+            bpmInit[id] = true;
           }
         } else {
-          if(now - prev >= 2) {
-            processBPM(buffer, thresh);
-            prev = now;
+          if(now[id] - prev[id] >= 2) {
+            processBPM(buffer[id], thresh, _id);
+            prev[id] = now[id];
           }
         }
     });
 
-    function setBPM(_bpm) {
+    function setBPM(_bpm, id) {
       console.log("setBPM");
-      $('#bpm').text(_bpm);
+      bpm_id = '#bpm-' + id;
+      $(bpm_id).text(_bpm);
 
       midiOutput.sendControlChange(1, _bpm);
     }
 
-    function processBPM(buffer, thresh) {
+    function processBPM(buffer, thresh, id) {
       _bpm = 0;
       _prev = 0;
       lastBeat = -3;
@@ -101,7 +138,7 @@ $(document).ready(function() {
           lastBeat = i;
         }
       }
-      setBPM(_bpm);
+      setBPM(_bpm, id);
     }
 // Event handler for server sent data.
     // The callback function is invoked whenever the server emits data
@@ -256,7 +293,7 @@ $(document).ready(function() {
     var sessionIdToMidiChannelNum = {};
     var numSessions = 0;
     var currSong = "02. Moondrops_8x.mp3";
-    
+
     var mostRecentTaps = [];
     var numMostRecentTaps = 25;
 

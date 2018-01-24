@@ -3,31 +3,85 @@
 <head>
     <title>biodance::conductor</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_biodance.css') }}">
-    
+
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.4.2.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='socket.io-1.3.5.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='foswig.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='webmidi.min.js') }}"></script>
-    
+
     <script type="text/javascript" src="{{ url_for('static', filename='biodance_conductor.js') }}"></script>
 </head>
 <body>
-    <div id="channels">
-      <div id="channel-flex" class="channel">
+    <div class="channels" id="channels-1">
+      <div id="channel-flex-1" class="channel channel-flex">
         <div class="channel-name">Flex</div>
-        <div id="flex" class="channel-value">0</div>
+        <div id="flex-1" class="channel-value">0</div>
       </div>
-      <div id="channel-bpm" class="channel">
+      <div id="channel-bpm-1" class="channel channel-bpm">
         <div class="channel-name">BPM</div>
-        <div id="bpm" class="channel-value">0</div>
+        <div id="bpm-1" class="channel-value">0</div>
       </div>
-      <div id="channel-eda" class="channel">
+      <div id="channel-eda-1" class="channel channel-eda">
         <div class="channel-name">EDA</div>
-        <div id="eda" class="channel-value">0</div>
+        <div id="eda-1" class="channel-value">0</div>
       </div>
     </div>
-    <div id="flex"></div>
-    <div id="eda"></div>
+    <div class="channels" id="channels-2">
+      <div id="channel-flex-2" class="channel channel-flex">
+        <div class="channel-name">Flex</div>
+        <div id="flex-2" class="channel-value">0</div>
+      </div>
+      <div id="channel-bpm-2" class="channel channel-bpm">
+        <div class="channel-name">BPM</div>
+        <div id="bpm-2" class="channel-value">0</div>
+      </div>
+      <div id="channel-eda-2" class="channel channel-eda">
+        <div class="channel-name">EDA</div>
+        <div id="eda-2" class="channel-value">0</div>
+      </div>
+    </div>
+    <div class="channels" id="channels-3">
+      <div id="channel-flex-3" class="channel channel-flex">
+        <div class="channel-name">Flex</div>
+        <div id="flex-3" class="channel-value">0</div>
+      </div>
+      <div id="channel-bpm-3" class="channel channel-bpm">
+        <div class="channel-name">BPM</div>
+        <div id="bpm-3" class="channel-value">0</div>
+      </div>
+      <div id="channel-eda-3" class="channel channel-eda">
+        <div class="channel-name">EDA</div>
+        <div id="eda-3" class="channel-value">0</div>
+      </div>
+    </div>
+    <div class="channels" id="channels-4">
+      <div id="channel-flex-4" class="channel channel-flex">
+        <div class="channel-name">Flex</div>
+        <div id="flex-4" class="channel-value">0</div>
+      </div>
+      <div id="channel-bpm-4" class="channel channel-bpm">
+        <div class="channel-name">BPM</div>
+        <div id="bpm-4" class="channel-value">0</div>
+      </div>
+      <div id="channel-eda-4" class="channel channel-eda">
+        <div class="channel-name">EDA</div>
+        <div id="eda-4" class="channel-value">0</div>
+      </div>
+    </div>
+    <div class="channels" id="channels-5">
+      <div id="channel-flex-5" class="channel channel-flex">
+        <div class="channel-name">Flex</div>
+        <div id="flex-5" class="channel-value">0</div>
+      </div>
+      <div id="channel-bpm-5" class="channel channel-bpm">
+        <div class="channel-name">BPM</div>
+        <div id="bpm-5" class="channel-value">0</div>
+      </div>
+      <div id="channel-eda-5" class="channel channel-eda">
+        <div class="channel-name">EDA</div>
+        <div id="eda-5" class="channel-value">0</div>
+      </div>
+    </div>
     <h1>biodance::conductor</h1>
 <!--     <p>
         <div id="tappy"></div>

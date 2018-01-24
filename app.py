@@ -66,6 +66,7 @@ def test_message(message):
 
 @socketio.on('biosignals', namespace='/test')
 def get_biosignals(message):
+  print(message)
   emit('biosignal_data', message, broadcast=True)
 
 

@@ -85,13 +85,33 @@ display: none;
   font-size: 90%;
 }
 
-#channels {
+.channels {
 width: 200px;
 height: 100%;
 position: absolute;
 right: 0;
 top: 0;
 background: rgba(0, 0, 0, .1);
+}
+
+#channels-1 {
+  right: 0;
+}
+
+#channels-2 {
+  right: 200px;
+}
+
+#channels-3 {
+  right: 400px;
+}
+
+#channels-4 {
+  right: 600px;
+}
+
+#channels-5 {
+  right: 800px;
 }
 
 .channel {
@@ -111,14 +131,14 @@ background: rgba(0, 0, 0, .1);
   font-weight: 300;
 }
 
-#channel-flex {
+.channel-flex {
 background: rgba(11, 102, 35, 0.1);
 }
 
-#channel-bpm {
+.channel-bpm {
 background: rgba(255, 0, 0, 0.1);
 }
 
-#channel-eda {
+.channel-eda {
 background: rgba(0, 0, 255, 0.1);
 }

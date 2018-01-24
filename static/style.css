@@ -85,7 +85,7 @@ display: none;
   font-size: 90%;
 }
 
-#channels {
+.channels {
 width: 200px;
 height: 100%;
 position: absolute;
@@ -111,14 +111,14 @@ background: rgba(0, 0, 0, .1);
   font-weight: 300;
 }
 
-#channel-flex {
-background: rgba(11, 102, 35, 0.1);
+.channel-flex {
+  background: rgba(11, 102, 35, 0.1) !important;
 }
 
-#channel-bpm {
-background: rgba(255, 0, 0, 0.1);
+.channel-bpm {
+  background: rgba(255, 0, 0, 0.1) !important;
 }
 
-#channel-eda {
-background: rgba(0, 0, 255, 0.1);
+.channel-eda {
+  background: rgba(0, 0, 255, 0.1) !important;
 }

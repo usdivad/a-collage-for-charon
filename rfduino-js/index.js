@@ -12,6 +12,8 @@ var socket = require('socket.io-client')('http://localhost:5000/test');
 var fs = require('fs');
 var stream = null;
 
+var dancers = [];
+
 console.log("Node server started");
 
 socket.on('connect', function() {
@@ -22,14 +24,15 @@ socket.on('hola', function() {
   console.log('hola');
 });
 
-function sendData(data) {
+function sendData(data, id) {
   flex = data.readUInt32LE(0);
   hr = data.readUInt32LE(4);
   eda = data.readUInt32LE(8);
   socket.emit('biosignals', {
     'flex':flex,
     'hr': hr,
-    'eda': eda
+    'eda': eda,
+    'id': dancers.indexOf(id)
   });
   console.log(flex, hr, eda);
 }
@@ -41,7 +44,7 @@ var stop = function() {
 
 noble.on('scanStart', function() {
     console.log('Scan started');
-    setTimeout(stop, 5000);
+    // setTimeout(stop, 5000);
 });
 
 noble.on('scanStop', function() {
@@ -55,10 +58,17 @@ var onDeviceDiscoveredCallback = function(peripheral) {
         console.log('RFduino is advertising \'' + rfduino.getAdvertisedServiceName(peripheral) + '\' service.');
 
         peripheral.on('connect', function() {
+            console.log(peripheral.uuid + " connected");
+            dancers.push(peripheral.uuid);
             peripheral.discoverServices();
         });
 
         peripheral.on('disconnect', function() {
+            console.log(peripheral.uuid + " disconnected");
+            var index = dancers.indexOf(peripheral.uuid);
+            if (index >= -1) {
+              dancers.splice(index, 1);
+            }
             console.log('Disconnected');
         });
 
@@ -92,7 +102,9 @@ var onDeviceDiscoveredCallback = function(peripheral) {
 
                 if (receiveCharacteristic) {
                     receiveCharacteristic.on('read', function(data, isNotification) {
-                        sendData(data);
+                        // console.log("-------------------------")
+                        // console.log(peripheral.uuid)
+                        sendData(data, peripheral.uuid);
                     });
 
                     console.log('Subscribing for temperature notifications');
