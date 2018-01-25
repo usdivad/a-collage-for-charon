@@ -38,12 +38,22 @@ $(document).ready(function() {
       "hrCC": [6,7,8,9,10],
       "edaCC": [11,12,13,14,15],
       "bpmCC": [16, 17, 18, 19, 20],
-      "edaNote": ["C2", "G2", "C3", "G3", "C4"],
-      "heartbeatNote": ["C5", "C5", "C5", "C5", "C5"]
+      "edaNote": ["C1", "G1", "C2", "G2", "C3"],
+      "heartbeatNote": ["C4", "G4", "C4", "G4", "C4"]
     };
+    var midiNoteDur = 300;
+    var sensorIds = [];
 
 
+    // Conductor triggerin
+    var conductorMidiNotes = [
+        "C3", "D3", "E3", "G3", "A3",
+        "C4", "D4", "E4", "G4", "A4",
+        "C5"
+    ];
 
+
+    // BIOSIGNAL HANDLER
     socket.on('biosignal_data', function (data) {
         // Update biosignal values
         id = data.id;
@@ -55,6 +65,12 @@ $(document).ready(function() {
         console.log("id: " + id);
         // console.log(id);
         //
+
+        if (!sensorIds.includes(id)) {
+            sensorIds.push(id);
+
+            $("#sensorIdsDisp").text("found " + sensorIds.length + " sensors: [" + sensorIds.toString() + "]");
+        }
 
         // MIDI params
         var midiChannel = midiParams["channel"][id];
@@ -80,6 +96,10 @@ $(document).ready(function() {
 
         // --------------------------------
         // SEND MIDI
+
+        if (!midiEnabled) {
+            return;
+        }
 
         // CC
 
@@ -108,7 +128,7 @@ $(document).ready(function() {
         // If EDA exceeds a given threshold, play note on MIDI channel
         if (eda[id] > 500) {
             if (isMidiTurnedOn) {
-              midiOutput.playNote(midiEdaNote, midiChannel, {"duration": 100});
+              midiOutput.playNote(midiEdaNote, midiChannel, {"duration": midiNoteDur});
               console.log("edaNote: " + midiEdaNote + ", channel " + midiChannel);
             }
         }
@@ -120,7 +140,7 @@ $(document).ready(function() {
             console.log("beat: " + _id);
             //beatOn
             if (isMidiTurnedOn) {
-              midiOutput.playNote(midiHeartbeatNote, midiChannel, {"duration": 100});
+              midiOutput.playNote(midiHeartbeatNote, midiChannel, {"duration": midiNoteDur});
               console.log("heartbeatNote: " + midiHeartbeatNote + ", channel " + midiChannel);
             }
             document.getElementById(channel_id).style.background = 'rgba(255,0,0,0.8)';
@@ -380,7 +400,23 @@ $(document).ready(function() {
     $("#midiOnOff").bind("mousedown touchstart", function(e) {
       isMidiTurnedOn = !isMidiTurnedOn;
       console.log("mmm");
-      $("#midiOnOffDisp").text(isMidiTurnedOn ? "midi on" : "midi off");
+      $("#midiOnOffDisp").text(isMidiTurnedOn ? "midi is ON" : "midi is OFF");
+    });
+
+
+    // Conductor triggering
+    $("body").keyup(function(e) {
+        var k = e.keyCode;
+        // console.log(k);
+
+        var channel = k - 48; // key code 49 -> MIDI channel 1
+        if (channel > 0 && channel <= midiParams["channel"].length) {
+            var triggerNote = conductorMidiNotes[Math.floor(Math.random() * conductorMidiNotes.length)];
+
+            midiOutput.playNote(triggerNote, channel, {"duration": midiNoteDur});
+
+            console.log("conductor triggered note " + triggerNote + " on channel " + channel);
+        }
     });
 
 });
