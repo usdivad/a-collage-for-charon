@@ -37,6 +37,7 @@ $(document).ready(function() {
       "flexCC": [1,2,3,4,5],
       "hrCC": [6,7,8,9,10],
       "edaCC": [11,12,13,14,15],
+      "bpmCC": [16, 17, 18, 19, 20],
       "edaNote": ["C2", "G2", "C3", "G3", "C4"],
       "heartbeatNote": ["C5", "C5", "C5", "C5", "C5"]
     };
@@ -84,26 +85,32 @@ $(document).ready(function() {
 
         // Scale and send flex data stream as CC
         // midiOutput.sendControlChange(2, Math.max(0, Math.min(127, ((flex[id]-200) / 500) * 127 )));
-        midiOutput.sendControlChange(midiCCFlex, scaleBiosignalToMidi(flex[id]));
-        console.log("flex: " + flex[id] + " --> " + scaleBiosignalToMidi(flex[id]));
+        if (isMidiTurnedOn) {
+          midiOutput.sendControlChange(midiCCFlex, scaleBiosignalToMidi(flex[id], "flex"));
+          console.log("flex: (cc" + midiCCFlex + "): " + flex[id] + " --> " + scaleBiosignalToMidi(flex[id], "flex"));
+        }
 
         // Scale and send EDA data stream as CC
         // midiOutput.sendControlChange(3, Math.max(0, Math.min(127, (eda[id]/300) * 127)));
-        midiOutput.sendControlChange(midiCCEda, scaleBiosignalToMidi(eda[id]));
-        console.log("eda: " + eda[id] + " --> " + scaleBiosignalToMidi(eda[id]));
-
+        if (isMidiTurnedOn) {
+          midiOutput.sendControlChange(midiCCEda, scaleBiosignalToMidi(eda[id], "eda"));
+          console.log("eda (cc" + midiCCEda + "): " + eda[id] + " --> " + scaleBiosignalToMidi(eda[id], "eda"));
+        }
 
         // Scale and send heart rate data stream as CC
-        midiOutput.sendControlChange(midiCCHr, scaleBiosignalToMidi(hr[id]));
-        console.log("hr: " + hr[id] + " --> " + scaleBiosignalToMidi(hr[id]));
-
+        if (isMidiTurnedOn) {
+          midiOutput.sendControlChange(midiCCHr, scaleBiosignalToMidi(hr[id], "hr"));
+          console.log("hr (cc" + midiCCHr + "): " + hr[id] + " --> " + scaleBiosignalToMidi(hr[id], "hr"));
+        }
 
         // Notes
 
         // If EDA exceeds a given threshold, play note on MIDI channel
         if (eda[id] > 500) {
-            midiOutput.playNote(midiEdaNote, midiChannel, {"duration": 100});
-            console.log("edaNote: " + midiEdaNote + ", " + midiChannel);
+            if (isMidiTurnedOn) {
+              midiOutput.playNote(midiEdaNote, midiChannel, {"duration": 100});
+              console.log("edaNote: " + midiEdaNote + ", channel " + midiChannel);
+            }
         }
 
         // If a heartbeat is detected, play note on MIDI channel
@@ -112,8 +119,10 @@ $(document).ready(function() {
         if(hr[id] - oldHr[id] > thresh && now[id] - lastBeat[id] > .4){
             console.log("beat: " + _id);
             //beatOn
-            midiOutput.playNote(midiHeartbeatNote, midiChannel, {"duration": 100});
-            console.log("heartbeatNote: " + midiHeartbeatNote + ", " + midiChannel);
+            if (isMidiTurnedOn) {
+              midiOutput.playNote(midiHeartbeatNote, midiChannel, {"duration": 100});
+              console.log("heartbeatNote: " + midiHeartbeatNote + ", channel " + midiChannel);
+            }
             document.getElementById(channel_id).style.background = 'rgba(255,0,0,0.8)';
             lastBeat[id] = new Date().getTime()/1000;
         } else {
@@ -142,8 +151,10 @@ $(document).ready(function() {
       console.log("setBPM");
       bpm_id = '#bpm-' + id;
       $(bpm_id).text(_bpm);
+      midiCCBpm = midiParams["bpmCC"][id];
 
-      midiOutput.sendControlChange(1, _bpm);
+      midiOutput.sendControlChange(midiCCBpm, scaleBiosignalToMidi(_bpm, "bpm"));
+      console.log("bpm (cc" + midiCCBpm + "): " + _bpm + " --> " + scaleBiosignalToMidi(_bpm, "bpm"));
     }
 
     function processBPM(buffer, thresh, id) {
@@ -162,8 +173,26 @@ $(document).ready(function() {
       setBPM(_bpm, id);
     }
 
-    function scaleBiosignalToMidi(biosignal) {
-        var midiValue = (biosignal / 1024) * 127;
+    function scaleBiosignalToMidi(biosignal, biosignalType) {
+        var denom = 1024;
+
+        switch (biosignalType) {
+          case "flex":
+            denom = 500;
+            break;
+          case "eda":
+            denom = 60;
+            break;
+          case "hr":
+            denom = 100;
+            break;
+          case "bpm":
+            denom = 200;
+          default:
+            // pass
+        }
+
+        var midiValue = (biosignal / denom) * 127;
         midiValue = Math.floor(Math.max(0, Math.min(midiValue, 127)));
         return midiValue;
     }
@@ -345,5 +374,13 @@ $(document).ready(function() {
     function getCurrSong() {
         return currSong;
     }
+
+    // MIDI on/off button
+    var isMidiTurnedOn = true;
+    $("#midiOnOff").bind("mousedown touchstart", function(e) {
+      isMidiTurnedOn = !isMidiTurnedOn;
+      console.log("mmm");
+      $("#midiOnOffDisp").text(isMidiTurnedOn ? "midi on" : "midi off");
+    });
 
 });
