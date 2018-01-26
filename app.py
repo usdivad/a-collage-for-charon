@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+import datetime
 import os
+import time
 from threading import Lock
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, join_room, leave_room, \
@@ -66,7 +68,8 @@ def test_message(message):
 
 @socketio.on('biosignals', namespace='/test')
 def get_biosignals(message):
-  print(message)
+  st = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+  print(st + ": " + str(message))
   emit('biosignal_data', message, broadcast=True)
 
 
