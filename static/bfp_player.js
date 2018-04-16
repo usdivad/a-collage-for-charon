@@ -91,27 +91,59 @@ $(document).ready(function() {
     shuffle(availableChars);
     var numCharsPerRow = 4;
     var keyboardLayout = [];
-    for (var i=0; i<availableChars.length; i++) {
-        var rowNum = Math.floor(i / numCharsPerRow);
-        while (keyboardLayout.length <= rowNum) {
-            keyboardLayout.push([]);
-        }
-        keyboardLayout[rowNum].push(availableChars[i]);
+    // for (var i=0; i<availableChars.length; i++) {
+    //     var rowNum = Math.floor(i / numCharsPerRow);
+    //     while (keyboardLayout.length <= rowNum) {
+    //         keyboardLayout.push([]);
+    //     }
+    //     keyboardLayout[rowNum].push(availableChars[i]);
+    // }
+    // keyboardLayout.push([["space", "space"], ["enter", "enter"]]);
+
+
+    // New keyboard layout
+    var keyboardRow1 = "1234567890".split("");
+    keyboardRow1.push("del");
+    keyboardRow1 = keyboardRow1.map(k => [k,k]);
+
+    var keyboardRow2 = "qwertyuiop".split("").map(k => [k.toLowerCase(),k.toUpperCase()]);
+    var keyboardRow3 = "asdfghjkl".split("").map(k => [k.toLowerCase(),k.toUpperCase()]);
+    var keyboardRow4 = "zxcvbnm,.?".split("").map(k => [k.toLowerCase(),k.toUpperCase()]);
+    var keyboardRow5 = ["shift", "space", "enter"].map(k => [k,k]);
+    var keyboardRows = [keyboardRow1, keyboardRow2, keyboardRow3, keyboardRow4, keyboardRow5];
+
+    for (var i=0; i<keyboardRows.length; i++) {
+        var row = keyboardRows[i];
+        // keyboardLayout.push(row.map(k => [k, k]));
+        keyboardLayout.push(row);
     }
-    keyboardLayout.push([["space", "space"], ["enter", "enter"]]);
+
+    // keyboardLayout = [
+    //     [["q"],["w"]],
+    //     [["space", "space"], ["enter", "enter"]]
+    // ];
+
 
     // Bind keyboard
     $("#inline").keyboard({
         layout: keyboardLayout
     });
+    // $("#inline").keyboard();
     $("#inline").remove();
 
     // Adjust style
-    $(".btn").css("width", "6.6em");
-    $(".btn").css("height", "6em");
-    $(".jqbtk-space").css("width", "16em");
-    $(".keyboard-container").css("height", "1600px");
-    // $(".keyboard-container").css("text-align", "center");
+    // $(".btn").css("width", "6.6em");
+    // $(".btn").css("height", "6em");
+    // $(".jqbtk-space").css("width", "16em");
+    // $(".keyboard-container").css("height", "1600px");
+    $(".keyboard-container").css("text-align", "center");
+
+
+
+
+    // ----
+
+
 
     // Generate session ID
     // From https://stackoverflow.com/a/19964557/4438760
@@ -174,6 +206,7 @@ $(document).ready(function() {
     // Send keyboard data to server
     $(document).on("touchstart mousedown", ".jqbtk-row .btn", function(e) {
         var keyChar = $(this).attr("data-value");
+        console.log("keyChar = " + keyChar);
 
         if (keyChar == "enter") {
             location.reload();
@@ -188,7 +221,12 @@ $(document).ready(function() {
         handleTap(keyChar);
         //console.log($(this).attr("data-value")); // this.getAttribute("data-value")
 
-        $("#disp").text($("#disp").text() + keyChar);
+        if (keyChar == "del") {
+            $("#disp").text($("#disp").text().substr(0, $("#disp").text().length-1));
+        }
+        else {
+            $("#disp").text($("#disp").text() + keyChar);
+        }
 
         return false;
     });
