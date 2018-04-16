@@ -132,10 +132,12 @@ $(document).ready(function() {
     $("#inline").remove();
 
     // Adjust style
-    // $(".btn").css("width", "6.6em");
-    // $(".btn").css("height", "6em");
-    // $(".jqbtk-space").css("width", "16em");
-    // $(".keyboard-container").css("height", "1600px");
+    $(".btn").css("width", "5.5em");
+    $(".btn").css("height", "5em");
+    $(".jqbtk-space").css("width", "24em");
+    $(".keyboard-container").css("height", "1500px");
+    $(".keyboard-container").css("width", "1500px");
+    $(".popover-content").css("width", "1500px");
     $(".keyboard-container").css("text-align", "center");
 
 
