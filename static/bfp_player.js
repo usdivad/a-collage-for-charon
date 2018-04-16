@@ -132,12 +132,12 @@ $(document).ready(function() {
     $("#inline").remove();
 
     // Adjust style
-    $(".btn").css("width", "3.3em");
-    $(".btn").css("height", "3em");
-    $(".jqbtk-space").css("width", "12em");
-    $(".keyboard-container").css("height", "1500px");
-    $(".keyboard-container").css("width", "1500px");
-    $(".popover-content").css("width", "1500px");
+    // $(".btn").css("width", "3.3em");
+    // $(".btn").css("height", "3em");
+    // $(".jqbtk-space").css("width", "12em");
+    // $(".keyboard-container").css("height", "1500px");
+    // $(".keyboard-container").css("width", "1500px");
+    // $(".popover-content").css("width", "1500px");
     // $(".keyboard-container").css("text-align", "center");
 
 
