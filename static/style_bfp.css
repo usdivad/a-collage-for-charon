@@ -1,0 +1,20 @@
+body {
+    /*text-align: center;*/
+}
+
+#disp {
+    font-family: Courier, monospace;
+    font-size: 125%;
+    color: white;
+    background: black;
+    margin: 20px 5px;
+    white-space: pre-wrap;
+}
+
+.debugArea {
+    display: none;
+}
+
+/*#praeludiumResolutions {
+
+}*/

@@ -58,6 +58,16 @@ def biodance_conductor():
 def midi_mapping_helper():
     return render_template('midi_mapping_helper.html', async_mode=socketio.async_mode)
 
+@app.route('/bfp_player')
+def bfp_player():
+    return render_template('bfp_player.html', async_mode=socketio.async_mode)
+
+@app.route('/bfp_conductor')
+def bfp_conductor():
+    return render_template('bfp_conductor.html', async_mode=socketio.async_mode)
+
+
+
 # ================================================================
 
 @socketio.on('my_event', namespace='/test')

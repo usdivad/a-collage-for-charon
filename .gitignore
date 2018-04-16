@@ -4,6 +4,8 @@
 *.swo
 *.swp
 *node_modules
+*.pdf
+*.png
 
 notes.txt
 
