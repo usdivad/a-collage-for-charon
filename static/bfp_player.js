@@ -139,6 +139,8 @@ $(document).ready(function() {
     $(".keyboard-container").css("text-align", "center");
 
 
+    // Shift
+    var isShiftOn = false;
 
 
     // ----
@@ -206,7 +208,6 @@ $(document).ready(function() {
     // Send keyboard data to server
     $(document).on("touchstart mousedown", ".jqbtk-row .btn", function(e) {
         var keyChar = $(this).attr("data-value");
-        console.log("keyChar = " + keyChar);
 
         if (keyChar == "enter") {
             location.reload();
@@ -218,8 +219,20 @@ $(document).ready(function() {
         if (keyChar == "space") {
             keyChar = " ";
         }
+
+        if (keyChar == "shift") {
+            isShiftOn = !isShiftOn;
+            return false;
+        }
+
+        if (isShiftOn) {
+            keyChar = keyChar.toUpperCase();
+            isShiftOn = false;
+        }
+
         handleTap(keyChar);
         //console.log($(this).attr("data-value")); // this.getAttribute("data-value")
+        console.log("keyChar = " + keyChar);
 
         if (keyChar == "del") {
             $("#disp").text($("#disp").text().substr(0, $("#disp").text().length-1));
