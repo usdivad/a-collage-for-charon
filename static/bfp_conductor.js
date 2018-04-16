@@ -287,8 +287,9 @@ $(document).ready(function() {
 
     // MIDI notes for BFP
     var midiNotesByChar = {};
-    var midiScale = ["C", "D", "E", "F", "G", "A", "B"];
-    var midiBaseOctave = 3;
+    // var midiScale = ["C", "D", "E", "F", "G", "A", "B"];
+    var midiScale = ["C", "D", "E", "G", "A"];
+    var midiBaseOctave = 4;
     var availableChars = BFP.alphabet.split("");
     for (var i=0; i<availableChars.length; i++) {
         var c = availableChars[i];
@@ -338,11 +339,14 @@ $(document).ready(function() {
     var melodyMidiChannel = midiNumChannels + 1; // 9
     var countermelodyMidiChannel = melodyMidiChannel + 1; // 10
     var melodyOct = 2;
-    var droneInterval = 17;
+    var droneInterval = 8;
     var droneCount = 0;
 
 
     // Tone.js instruments
+    var reverb = new Tone.JCReverb(0.9).connect(Tone.Master);
+    var delay = new Tone.FeedbackDelay(0.0);
+
     var melodySynth = new Tone.Synth({
         oscillator: {
             type: "triangle12"
@@ -353,23 +357,25 @@ $(document).ready(function() {
             sustain: 1,
             release: 1
         }
-    }).toMaster();
+    }).chain(delay, reverb);
+    melodySynth.volume.value = -6;
 
     var sessionSynths = [];
-    var numSessionSynths = Math.max(midiNumChannels, Math.max(melodyMidiChannel, countermelodyMidiChannel));
+    var numSessionSynths = Math.max(midiNumChannels, Math.max(melodyMidiChannel, countermelodyMidiChannel)) + 1;
     var sessionSynthOscTypes = ["sine", "square", "triangle", "sawtooth"];
     for (var i=0; i<numSessionSynths; i++) {
         var synth = new Tone.Synth({
             oscillator: {
-                type: sessionSynthOscTypes[Math.floor(Math.random()*sessionSynthOscTypes.length)] + (Math.floor(Math.random()*12) + 8)
+                type: sessionSynthOscTypes[Math.floor(Math.random()*sessionSynthOscTypes.length)] + (i < midiNumChannels ? Math.floor(Math.random() * 12) + 8 : Math.floor(Math.random()*8) + 4)
             },
             envelope: {
-                attack: Math.random() * 1.0 + 0.25,
+                attack: i < midiNumChannels ? Math.random() * 0.25 : Math.random() * 1.0 + 0.25,
                 decay: Math.random() * 1.0 + 0.5,
                 sustain: Math.random() * 1.0 + 0.5,
                 release: Math.random() * 1.0 + 0.5
             }
-        }).toMaster();
+        }).chain(delay, reverb);
+        synth.volume.value = -12;
         sessionSynths.push(synth);
     }
 
@@ -421,7 +427,7 @@ $(document).ready(function() {
 
             // midiOutput.stopNote(melodyPrevNote, melodyMidiChannel);
             // midiOutput.playNote(melodyNote, melodyMidiChannel);
-            sessionSynths[melodyMidiChannel].triggerAttackRelease(melodyNote, "4n");
+            sessionSynths[melodyMidiChannel].triggerAttackRelease(melodyNote, "8n");
             console.log("Playing note #" + melodyIdx + " (" + melodyNote + ")" + " for melody " + currMelodyId);
             
             melodyIdx++;
@@ -440,7 +446,7 @@ $(document).ready(function() {
             }
 
             // midiOutput.playNote(melodyNote, countermelodyMidiChannel, {"duration": 250});
-            sessionSynths[countermelodyMidiChannel].triggerAttackRelease(melodyNote, {"duration": 250});
+            sessionSynths[countermelodyMidiChannel].triggerAttackRelease(melodyNote, "8n");
 
             var logMsg = logMsg = "[" + new Date().toJSON() + "]: ";
             logMsg += "Playing note (" + melodyNote + ") for countermelody";
@@ -459,7 +465,7 @@ $(document).ready(function() {
 
         if (droneCount % droneInterval == 0) {
             // midiOutput.playNote("C1", melodyMidiChannel);
-            melodySynth.triggerAttackRelease("C2", "1n");
+            melodySynth.triggerAttackRelease("C2", "2n");
             // console.log(melodySynth);
             console.log("Playing drone");
         }
