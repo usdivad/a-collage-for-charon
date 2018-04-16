@@ -134,7 +134,10 @@ $(document).ready(function() {
 
                 var keyChar = msgData["keyChar"];
                 // var midiNote = midiNotesByChar[keyChar];
-                midiNote = midiNotesByChar[keyChar];
+
+                if (midiNotesByChar.hasOwnProperty(keyChar)) {
+                    midiNote = midiNotesByChar[keyChar];
+                }
 
                 // Channel
                 // TODO: Increment channel num and use modulo
@@ -168,7 +171,12 @@ $(document).ready(function() {
                     BFP.sessionTextsById[sessionId] = [];
                 }
                 melodiesById[sessionId].push(midiNote);
-                BFP.sessionTextsById[sessionId].push(keyChar);
+                if (keyChar == "del") {
+                    BFP.sessionTextsById[sessionId].pop();
+                }
+                else {
+                    BFP.sessionTextsById[sessionId].push(keyChar);
+                }
 
                 // Print texts
                 var idKeys = Object.keys(melodiesById);
@@ -395,7 +403,7 @@ $(document).ready(function() {
 
             midiOutput.playNote(melodyNote, countermelodyMidiChannel, {"duration": 250});
 
-            var logMsg = var logMsg = "[" + new Date().toJSON() + "]: ";
+            var logMsg = logMsg = "[" + new Date().toJSON() + "]: ";
             logMsg += "Playing note (" + melodyNote + ") for countermelody";
             console.log(logMsg);
 
