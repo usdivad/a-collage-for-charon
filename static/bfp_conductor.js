@@ -156,12 +156,17 @@ $(document).ready(function() {
                     sessionIdToMidiChannelNum[sessionId] = midiChannelNum;
                 }
 
+                // Play in browser
+                // (see below)
+
+
                 // Send the MIDI output!
-                if (!midiOutput) {
-                  return;
-                }
+                // if (!midiOutput) {
+                //   return;
+                // }
                 var dur = (Math.random() * 2000) + 500;
-                midiOutput.playNote(midiNote, midiChannelNum, {"duration": dur});
+                // midiOutput.playNote(midiNote, midiChannelNum, {"duration": dur});
+                sessionSynths[midiChannelNum].triggerAttackRelease(midiNote, "8n");
                 console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                 // midiOutput.playNote("C4");
 
@@ -283,12 +288,12 @@ $(document).ready(function() {
     // MIDI notes for BFP
     var midiNotesByChar = {};
     var midiScale = ["C", "D", "E", "F", "G", "A", "B"];
-    var midiBaseOctave = 2;
+    var midiBaseOctave = 3;
     var availableChars = BFP.alphabet.split("");
     for (var i=0; i<availableChars.length; i++) {
         var c = availableChars[i];
         var pitch = midiScale[i % midiScale.length]
-        var octave = (Math.floor(i / midiScale.length) + midiBaseOctave).toString();
+        var octave = ((Math.floor(i / midiScale.length) % 2) + midiBaseOctave).toString();
         var note = pitch + octave;
         midiNotesByChar[c] = note;
     }
@@ -336,15 +341,47 @@ $(document).ready(function() {
     var droneInterval = 17;
     var droneCount = 0;
 
+
+    // Tone.js instruments
+    var melodySynth = new Tone.Synth({
+        oscillator: {
+            type: "triangle12"
+        },
+        envelope: {
+            attack: 0.1,
+            decay: 1,
+            sustain: 1,
+            release: 1
+        }
+    }).toMaster();
+
+    var sessionSynths = [];
+    var numSessionSynths = Math.max(midiNumChannels, Math.max(melodyMidiChannel, countermelodyMidiChannel));
+    var sessionSynthOscTypes = ["sine", "square", "triangle", "sawtooth"];
+    for (var i=0; i<numSessionSynths; i++) {
+        var synth = new Tone.Synth({
+            oscillator: {
+                type: sessionSynthOscTypes[Math.floor(Math.random()*sessionSynthOscTypes.length)] + (Math.floor(Math.random()*12) + 8)
+            },
+            envelope: {
+                attack: Math.random() * 1.0 + 0.25,
+                decay: Math.random() * 1.0 + 0.5,
+                sustain: Math.random() * 1.0 + 0.5,
+                release: Math.random() * 1.0 + 0.5
+            }
+        }).toMaster();
+        sessionSynths.push(synth);
+    }
+
     // Setup transport
     Tone.Transport.start();
     Tone.Transport.bpm.value = melodyBPM;
 
     // Play underlying melody
     Tone.Transport.scheduleRepeat(function(time) {
-        if (midiOutput === undefined) {
-            return;
-        }
+        // if (midiOutput === undefined) {
+        //     return;
+        // }
 
         console.log(melodyIdx);
         var shouldSwitchMelody = false;
@@ -382,8 +419,9 @@ $(document).ready(function() {
             melodyNote = melodyNote[0] + melodyOct.toString();
             console.log(melodyNote);
 
-            midiOutput.stopNote(melodyPrevNote, melodyMidiChannel);
-            midiOutput.playNote(melodyNote, melodyMidiChannel);
+            // midiOutput.stopNote(melodyPrevNote, melodyMidiChannel);
+            // midiOutput.playNote(melodyNote, melodyMidiChannel);
+            sessionSynths[melodyMidiChannel].triggerAttackRelease(melodyNote, "4n");
             console.log("Playing note #" + melodyIdx + " (" + melodyNote + ")" + " for melody " + currMelodyId);
             
             melodyIdx++;
@@ -401,7 +439,8 @@ $(document).ready(function() {
                 melodyNote = melodyNote[0] + "4";
             }
 
-            midiOutput.playNote(melodyNote, countermelodyMidiChannel, {"duration": 250});
+            // midiOutput.playNote(melodyNote, countermelodyMidiChannel, {"duration": 250});
+            sessionSynths[countermelodyMidiChannel].triggerAttackRelease(melodyNote, {"duration": 250});
 
             var logMsg = logMsg = "[" + new Date().toJSON() + "]: ";
             logMsg += "Playing note (" + melodyNote + ") for countermelody";
@@ -413,12 +452,15 @@ $(document).ready(function() {
     
     // Play base drone
     Tone.Transport.scheduleRepeat(function(time) {
-        if (midiOutput === undefined) {
-            return;
-        }
+        // Send MIDI
+        // if (midiOutput === undefined) {
+        //     return;
+        // }
 
         if (droneCount % droneInterval == 0) {
-            midiOutput.playNote("C1", melodyMidiChannel);
+            // midiOutput.playNote("C1", melodyMidiChannel);
+            melodySynth.triggerAttackRelease("C2", "1n");
+            // console.log(melodySynth);
             console.log("Playing drone");
         }
 
