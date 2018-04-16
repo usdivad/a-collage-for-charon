@@ -212,7 +212,7 @@ $(document).ready(function() {
         if (keyChar == "enter") {
             location.reload();
             $("#disp").text("");
-            handleTap(" ");
+            handleTap("enter");
             return false;
         }
 

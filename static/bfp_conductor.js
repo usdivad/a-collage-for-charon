@@ -179,6 +179,9 @@ $(document).ready(function() {
                 if (keyChar == "del") {
                     BFP.sessionTextsById[sessionId].pop();
                 }
+                else if (keyChar == "enter") {
+                    // pass
+                }
                 else {
                     BFP.sessionTextsById[sessionId].push(keyChar);
                 }
@@ -298,6 +301,7 @@ $(document).ready(function() {
         var note = pitch + octave;
         midiNotesByChar[c] = note;
     }
+    midiNotesByChar["enter"] = "C6";
     console.log(midiNotesByChar);
 
     var midiNumChannels = 8;
