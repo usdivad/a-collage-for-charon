@@ -171,7 +171,9 @@ $(document).ready(function() {
                 //sessionSynths[midiChannelNum].triggerAttackRelease(midiNote, "8n");
 
                 // pnoSampler.triggerAttack(midiNote);
-                harpSampler.triggerAttack(midiNote);
+                if (areharpSamplesLoaded) {
+                    harpSampler.triggerAttack(midiNote);
+                }
                 
                 console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                 // midiOutput.playNote("C4");

@@ -6,6 +6,7 @@
 *node_modules
 *.pdf
 *.png
+*.eps
 
 notes.txt
 
