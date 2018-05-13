@@ -7,6 +7,7 @@ Used in:
 - *a collage for charon* at [A R E A Gallery](http://area.gallery)'s COLLAGE / [Yi and the Thousand Moons](http://yiandthethousandmoons.com/) OST release party, 12/1/2017
 - *Praeludium* at A R E A Gallery's POSSIBLE, 12/28/2017
 - Dance & Design Making Lab, MIT IAP workshop, 1/21/2018
+- *Praeludium* at [Business for Peace](http://www.businessforpeace.no)'s [Climate Leadership Summit](http://www.businessforpeace.com/summit/) in Oslo, 5/15/2018 - 5/16/2018
 - ... your next installation project :)
 
 
