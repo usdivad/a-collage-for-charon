@@ -170,7 +170,8 @@ $(document).ready(function() {
                 
                 //sessionSynths[midiChannelNum].triggerAttackRelease(midiNote, "8n");
 
-                pnoSampler.triggerAttack(midiNote);
+                // pnoSampler.triggerAttack(midiNote);
+                harpSampler.triggerAttack(midiNote);
                 
                 console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                 // midiOutput.playNote("C4");
@@ -409,6 +410,22 @@ $(document).ready(function() {
         arePnoSamplesLoaded = true;
     }).connect(Tone.Master);
 
+    var harpSamplesBasePath = Flask.url_for("static", {"filename": "samples/harp"});
+    console.log("harp samples: " + harpSamplesBasePath);
+    var harpSamplerParams = {};
+    for (var i=1; i<6; i++) {
+        for (var j=0; j<midiScale.length; j++) {
+            var midiNote = midiScale[j] + i;
+            var samplePath = harpSamplesBasePath + "/" + midiNote + ".mp3"
+            harpSamplerParams[midiNote] = samplePath;
+        }
+    }
+    var areharpSamplesLoaded = false;
+    var harpSampler = new Tone.Sampler(harpSamplerParams, function() {
+        console.log("harp samples loaded");
+        areharpSamplesLoaded = true;
+    }).connect(Tone.Master);
+
 
 
     // PLAYBACK
@@ -469,6 +486,7 @@ $(document).ready(function() {
             //sessionSynths[melodyMidiChannel].triggerAttackRelease(melodyNote, "8n");
             
             pnoSampler.triggerAttack(melodyNote);
+
 
             console.log("Playing note #" + melodyIdx + " (" + melodyNote + ")" + " for melody " + currMelodyId);
             
