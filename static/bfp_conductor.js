@@ -165,8 +165,13 @@ $(document).ready(function() {
                 //   return;
                 // }
                 var dur = (Math.random() * 2000) + 500;
+                
                 // midiOutput.playNote(midiNote, midiChannelNum, {"duration": dur});
-                sessionSynths[midiChannelNum].triggerAttackRelease(midiNote, "8n");
+                
+                //sessionSynths[midiChannelNum].triggerAttackRelease(midiNote, "8n");
+
+                pnoSampler.triggerAttack(midiNote);
+                
                 console.log(sessionId + "," + midiNote + "," + midiChannelNum);
                 // midiOutput.playNote("C4");
 
@@ -274,10 +279,9 @@ $(document).ready(function() {
 
     // ================================
     // David's additions
-    StartAudioContext(Tone.context, "#startAudioStatus", function(){
+    StartAudioContext(Tone.context, "   #startAudioStatus", function(){
         $("#startAudioStatus").text("audio is ENABLED");  
     });
-
 
     var midiEnabled = false;
     var midiOutputName = "IAC Driver Bus 1";
@@ -352,7 +356,7 @@ $(document).ready(function() {
     var droneCount = 0;
 
 
-    // Tone.js instruments
+    // Tone.js instruments for BFP
     var reverb = new Tone.JCReverb(0.9).connect(Tone.Master);
     var delay = new Tone.FeedbackDelay(0.0);
 
@@ -388,6 +392,27 @@ $(document).ready(function() {
         sessionSynths.push(synth);
     }
 
+    // Sampler(s) for BFP
+    var pnoSamplesBasePath = Flask.url_for("static", {"filename": "samples/pno"});
+    console.log("pno samples: " + pnoSamplesBasePath);
+    var pnoSamplerParams = {};
+    for (var i=1; i<6; i++) {
+        for (var j=0; j<midiScale.length; j++) {
+            var midiNote = midiScale[j] + i;
+            var samplePath = pnoSamplesBasePath + "/" + midiNote + ".mp3"
+            pnoSamplerParams[midiNote] = samplePath;
+        }
+    }
+    var arePnoSamplesLoaded = false;
+    var pnoSampler = new Tone.Sampler(pnoSamplerParams, function() {
+        console.log("pno samples loaded");
+        arePnoSamplesLoaded = true;
+    }).connect(Tone.Master);
+
+
+
+    // PLAYBACK
+
     // Setup transport
     Tone.Transport.start();
     Tone.Transport.bpm.value = melodyBPM;
@@ -397,6 +422,10 @@ $(document).ready(function() {
         // if (midiOutput === undefined) {
         //     return;
         // }
+
+        if (!arePnoSamplesLoaded) {
+            return;
+        }
 
         console.log(melodyIdx);
         var shouldSwitchMelody = false;
@@ -436,7 +465,11 @@ $(document).ready(function() {
 
             // midiOutput.stopNote(melodyPrevNote, melodyMidiChannel);
             // midiOutput.playNote(melodyNote, melodyMidiChannel);
-            sessionSynths[melodyMidiChannel].triggerAttackRelease(melodyNote, "8n");
+            
+            //sessionSynths[melodyMidiChannel].triggerAttackRelease(melodyNote, "8n");
+            
+            pnoSampler.triggerAttack(melodyNote);
+
             console.log("Playing note #" + melodyIdx + " (" + melodyNote + ")" + " for melody " + currMelodyId);
             
             melodyIdx++;
@@ -455,7 +488,10 @@ $(document).ready(function() {
             }
 
             // midiOutput.playNote(melodyNote, countermelodyMidiChannel, {"duration": 250});
-            sessionSynths[countermelodyMidiChannel].triggerAttackRelease(melodyNote, "8n");
+            
+            //sessionSynths[countermelodyMidiChannel].triggerAttackRelease(melodyNote, "8n");
+            
+            pnoSampler.triggerAttack(melodyNote);
 
             var logMsg = logMsg = "[" + new Date().toJSON() + "]: ";
             logMsg += "Playing note (" + melodyNote + ") for countermelody";
@@ -474,8 +510,12 @@ $(document).ready(function() {
 
         if (droneCount % droneInterval == 0) {
             // midiOutput.playNote("C1", melodyMidiChannel);
-            melodySynth.triggerAttackRelease("C2", "2n");
+            
+            //melodySynth.triggerAttackRelease("C2", "2n");
             // console.log(melodySynth);
+
+            pnoSampler.triggerAttack("C2");
+
             console.log("Playing drone");
         }
 
