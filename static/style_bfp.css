@@ -11,6 +11,7 @@ body {
     background: black;
     margin: 20px 5px;
     white-space: pre-wrap;
+    min-width: 100%;
 }
 
 .debugArea {
