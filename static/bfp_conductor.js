@@ -274,6 +274,11 @@ $(document).ready(function() {
 
     // ================================
     // David's additions
+    StartAudioContext(Tone.context, "#startAudioStatus", function(){
+        $("#startAudioStatus").text("audio is ENABLED");  
+    });
+
+
     var midiEnabled = false;
     var midiOutputName = "IAC Driver Bus 1";
     var midiOutput;

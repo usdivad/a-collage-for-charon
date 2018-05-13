@@ -18,6 +18,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='foswig.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='webmidi.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='tone.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='StartAudioContext.js') }}"></script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='bfp.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bfp_conductor.js') }}"></script>
@@ -44,6 +45,9 @@
         <div id="tappy"></div>
     </p> -->
     <br/>
+    <div id="startAudio">
+        <div id="startAudioStatus">audio is DISABLED (click+wait to enable)</div>
+    </div>
     <!-- <p>
         <h2>Choose Song</h2>
             <select id="songSelect" name="broadcast_data">
