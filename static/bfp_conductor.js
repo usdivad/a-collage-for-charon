@@ -172,7 +172,7 @@ $(document).ready(function() {
 
                 // pnoSampler.triggerAttack(midiNote);
                 if (areharpSamplesLoaded) {
-                    harpSampler.triggerAttack(midiNote);
+                    harpSampler.triggerAttack(midiNote, "+0", 0.5);
                 }
                 
                 console.log(sessionId + "," + midiNote + "," + midiChannelNum);
