@@ -283,7 +283,7 @@ $(document).ready(function() {
     // ================================
     // David's additions
     StartAudioContext(Tone.context, "   #startAudioStatus", function(){
-        $("#startAudioStatus").text("audio is ENABLED");  
+        $("#startAudioStatus").text("Audio is ENABLED");  
     });
 
     var midiEnabled = false;
@@ -409,6 +409,7 @@ $(document).ready(function() {
     var arePnoSamplesLoaded = false;
     var pnoSampler = new Tone.Sampler(pnoSamplerParams, function() {
         console.log("pno samples loaded");
+        $("#pnoSamplesStatus").text("Piano samples loaded");
         arePnoSamplesLoaded = true;
     }).connect(Tone.Master);
 
@@ -425,6 +426,7 @@ $(document).ready(function() {
     var areharpSamplesLoaded = false;
     var harpSampler = new Tone.Sampler(harpSamplerParams, function() {
         console.log("harp samples loaded");
+        $("#harpSamplesStatus").text("Harp samples loaded");
         areharpSamplesLoaded = true;
     }).connect(Tone.Master);
 
