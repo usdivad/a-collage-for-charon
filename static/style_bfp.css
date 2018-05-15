@@ -4,11 +4,21 @@ body {
     /*color: black;*/
 }
 
-#disp {
+#disp_player {
     font-family: Courier, monospace;
     font-size: 125%;
     color: white;
     background: black;
+    margin: 20px 5px;
+    white-space: pre-wrap;
+    min-width: 100%;
+}
+
+#disp_conductor {
+    font-family: Courier, monospace;
+    font-size: 125%;
+    color: black;
+    background: white;
     margin: 20px 5px;
     white-space: pre-wrap;
     min-width: 100%;
@@ -34,4 +44,8 @@ div.popover.fade.in {
 
 div.popover-content {
     max-width: 100%;
+}
+
+#how {
+    font-size: 125%;
 }

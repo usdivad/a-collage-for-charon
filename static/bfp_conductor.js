@@ -201,7 +201,7 @@ $(document).ready(function() {
                     var melody = BFP.sessionTextsById[idKeys[i]];
                     melodyTexts.push(melody.join(""));
                 }
-                $("#disp").html(melodyTexts.join("<br>"));
+                $("#disp_conductor").html(melodyTexts.join("<br>"));
             }
         }
 

@@ -213,7 +213,7 @@ $(document).ready(function() {
 
         if (keyChar == "enter") {
             location.reload();
-            $("#disp").text("");
+            $("#disp_player").text("");
             handleTap("enter");
             return false;
         }
@@ -237,10 +237,10 @@ $(document).ready(function() {
         console.log("keyChar = " + keyChar);
 
         if (keyChar == "del") {
-            $("#disp").text($("#disp").text().substr(0, $("#disp").text().length-1));
+            $("#disp_player").text($("#disp_player").text().substr(0, $("#disp_player").text().length-1));
         }
         else {
-            $("#disp").text($("#disp").text() + keyChar);
+            $("#disp_player").text($("#disp_player").text() + keyChar);
         }
 
         return false;
